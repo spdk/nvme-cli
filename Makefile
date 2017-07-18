@@ -24,6 +24,8 @@ AUTHOR=Keith Busch <keith.busch@intel.com>
 
 default: $(NVME)
 
+include env.spdk.mk
+
 NVME-VERSION-FILE: FORCE
 	@$(SHELL_PATH) ./NVME-VERSION-GEN
 -include NVME-VERSION-FILE
@@ -33,16 +35,16 @@ NVME_DPKG_VERSION=1~`lsb_release -sc`
 
 OBJS := argconfig.o suffix.o parser.o nvme-print.o nvme-ioctl.o \
 	nvme-lightnvm.o fabrics.o json.o plugin.o intel-nvme.o \
-	lnvm-nvme.o memblaze-nvme.o wdc-nvme.o nvme-models.o huawei-nvme.o
+	lnvm-nvme.o memblaze-nvme.o wdc-nvme.o nvme-models.o huawei-nvme.o spdk-nvme.o
 
 nvme: nvme.c nvme.h $(OBJS) NVME-VERSION-FILE
-	$(CC) $(CPPFLAGS) $(CFLAGS) nvme.c -o $(NVME) $(OBJS) $(LDFLAGS)
+	$(CC) $(CPPFLAGS) $(CFLAGS) nvme.c -o $(NVME) -Wl,--whole-archive $(SPDK_LIB) $(OBJS) $(LDFLAGS)
 
 nvme.o: nvme.c nvme.h nvme-print.h nvme-ioctl.h argconfig.h suffix.h nvme-lightnvm.h fabrics.h
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c $<
 
 %.o: %.c %.h nvme.h linux/nvme_ioctl.h
-	$(CC) $(CPPFLAGS) $(CFLAGS) -c $<
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(SPDK_INC) -c $<
 
 doc: $(NVME)
 	$(MAKE) -C Documentation
