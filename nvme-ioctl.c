@@ -21,11 +21,17 @@
 
 #include "nvme-ioctl.h"
 
+#include "spdk-nvme.h"
+
 static int nvme_verify_chr(int fd)
 {
 	static struct stat nvme_stat;
-	int err = fstat(fd, &nvme_stat);
+	int err = nvme_spdk_is_valid_fd(fd);
+	if (err == 0) {
+		return 0;
+	}
 
+	err = fstat(fd, &nvme_stat);
 	if (err < 0) {
 		perror("fstat");
 		return errno;
@@ -55,11 +61,20 @@ int nvme_reset_controller(int fd)
 	ret = nvme_verify_chr(fd);
 	if (ret)
 		return ret;
+
+	if (nvme_spdk_is_valid_fd(fd) == 0) {
+		return spdk_nvme_ctrlr_reset(nvme_spdk_get_ctrlr_by_fd(fd));
+	}
+
 	return ioctl(fd, NVME_IOCTL_RESET);
 }
 
 int nvme_get_nsid(int fd)
 {
+	if (nvme_spdk_is_valid_fd(fd) == 0) {
+		return nvme_spdk_get_nsid(fd);
+	}
+
 	static struct stat nvme_stat;
 	int err = fstat(fd, &nvme_stat);
 
@@ -76,16 +91,41 @@ int nvme_get_nsid(int fd)
 
 int nvme_submit_passthru(int fd, int ioctl_cmd, struct nvme_passthru_cmd *cmd)
 {
+	if (ioctl_cmd == NVME_IOCTL_ADMIN_CMD) {
+		if (nvme_spdk_is_valid_fd(fd) == 0) {
+			return nvme_spdk_submit_cmd_passthru(fd, cmd, true);
+		}
+	}
+
 	return ioctl(fd, ioctl_cmd, cmd);
 }
 
 static int nvme_submit_admin_passthru(int fd, struct nvme_passthru_cmd *cmd)
 {
+	if (nvme_spdk_is_valid_fd(fd) == 0) {
+		return nvme_spdk_submit_cmd_passthru(fd, cmd, true);
+	}
+
 	return ioctl(fd, NVME_IOCTL_ADMIN_CMD, cmd);
 }
 
 static int nvme_submit_io_passthru(int fd, struct nvme_passthru_cmd *cmd)
 {
+	if (g_spdk_enabled) {
+		switch (cmd->opcode) {
+			case nvme_cmd_flush:
+			case nvme_cmd_write_zeroes:
+			case nvme_cmd_write_uncor:
+			case nvme_cmd_dsm:
+				return nvme_spdk_submit_cmd_passthru(fd, cmd, false);
+
+			default:
+				fprintf(stderr,
+					"Error: unsupported opcode %d\n", cmd->opcode);
+				break;
+		}
+	}
+
 	return ioctl(fd, NVME_IOCTL_IO_CMD, cmd);
 }
 
@@ -141,6 +181,11 @@ int nvme_io(int fd, __u8 opcode, __u64 slba, __u16 nblocks, __u16 control,
 		.appmask	= apptag,
 		.apptag		= appmask,
 	};
+
+	if (g_spdk_enabled == true) {
+		return nvme_spdk_io(fd, &io);
+	}
+
 	return ioctl(fd, NVME_IOCTL_SUBMIT_IO, &io);
 }
 
@@ -514,6 +559,15 @@ int nvme_ns_attachment(int fd, __u32 nsid, __u16 num_ctrls, __u16 *ctrlist,
 	cntlist->num = cpu_to_le16(num_ctrls);
 	for (i = 0; i < num_ctrls; i++)
 		cntlist->identifier[i] = cpu_to_le16(ctrlist[i]);
+
+	if (nvme_spdk_is_valid_fd(fd) == 0) {
+		if (num_ctrls == 0) {
+			struct spdk_nvme_ctrlr *ctrlr = nvme_spdk_get_ctrlr_by_fd(fd);
+			const struct spdk_nvme_ctrlr_data *cdata = spdk_nvme_ctrlr_get_data(ctrlr);
+			cntlist->identifier[0] = cdata->cntlid;
+			cntlist->num = 1;
+		}
+	}
 
 	return nvme_submit_admin_passthru(fd, &cmd);
 }
