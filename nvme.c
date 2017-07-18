@@ -48,6 +48,7 @@
 #include "nvme-print.h"
 #include "nvme-ioctl.h"
 #include "nvme-lightnvm.h"
+#include "spdk-nvme.h"
 #include "plugin.h"
 
 #include "argconfig.h"
@@ -97,6 +98,11 @@ static int open_dev(const char *dev)
 	int err, fd;
 
 	devicename = basename(dev);
+
+	if (g_spdk_enabled) {
+		return nvme_spdk_get_fd_by_dev(dev);
+	}
+
 	err = open(dev, O_RDONLY);
 	if (err < 0)
 		goto perror;
@@ -1571,7 +1577,11 @@ static int list(int argc, char **argv, struct command *cmd, struct plugin *plugi
 	if (fmt != JSON && fmt != NORMAL)
 		return -EINVAL;
 
-	n = scandir(dev, &devices, scan_dev_filter, alphasort);
+	if (g_spdk_enabled == true) {
+		n = g_num_ctrlr;
+	} else {
+		n = scandir(dev, &devices, scan_dev_filter, alphasort);
+	}
 	if (n < 0) {
 		fprintf(stderr, "no NVMe device(s) detected.\n");
 		return n;
@@ -1584,8 +1594,14 @@ static int list(int argc, char **argv, struct command *cmd, struct plugin *plugi
 	}
 
 	for (i = 0; i < n; i++) {
-		snprintf(path, sizeof(path), "%s%s", dev, devices[i]->d_name);
-		fd = open(path, O_RDONLY);
+		if (g_spdk_enabled == true) {
+			snprintf(path, sizeof(path), "%s", g_spdk_dev[i].traddr);
+			fd = g_spdk_dev[i].fd;
+		} else {
+			snprintf(path, sizeof(path), "%s%s", dev, devices[i]->d_name);
+			fd = open(path, O_RDONLY);
+		}
+
 		if (fd < 0) {
 			fprintf(stderr, "can not open %s: %s\n", path,
 					strerror(errno));
@@ -1605,9 +1621,11 @@ static int list(int argc, char **argv, struct command *cmd, struct plugin *plugi
 	else
 		show_list_items(list_items, list_cnt);
 
-	for (i = 0; i < n; i++)
-		free(devices[i]);
-	free(devices);
+	if (g_spdk_enabled == false) {
+		for (i = 0; i < n; i++)
+			free(devices[i]);
+		free(devices);
+	}
 	free(list_items);
 
 	return 0;
@@ -2749,7 +2767,7 @@ static int format(int argc, char **argv, struct command *cmd, struct plugin *plu
 	if (fd < 0)
 		return fd;
 
-	if (S_ISBLK(nvme_stat.st_mode)) {
+	if (S_ISBLK(nvme_stat.st_mode) || (g_spdk_enabled == true)) {
 		cfg.namespace_id = get_nsid(fd);
 		if (cfg.namespace_id == 0) {
 			err = EINVAL;
@@ -3928,7 +3946,9 @@ static int submit_io(int opcode, char *command, const char *desc,
 		goto close_mfd;
 	}
 
-	if (ioctl(fd, BLKPBSZGET, &phys_sector_size) < 0)
+	if (g_spdk_enabled == true) {
+		nvme_spdk_ns_sector_size(fd, &phys_sector_size);
+	} else if (ioctl(fd, BLKPBSZGET, &phys_sector_size) < 0)
 		goto close_mfd;
 
 	buffer_size = (cfg.block_count + 1) * phys_sector_size;
@@ -4494,25 +4514,25 @@ static int gen_hostnqn_cmd(int argc, char **argv, struct command *command, struc
 static int discover_cmd(int argc, char **argv, struct command *command, struct plugin *plugin)
 {
 	const char *desc = "Send Get Log Page request to Discovery Controller.";
-	return discover(desc, argc, argv, false);
+	return fdiscover(desc, argc, argv, false);
 }
 
 static int connect_all_cmd(int argc, char **argv, struct command *command, struct plugin *plugin)
 {
 	const char *desc = "Discover NVMeoF subsystems and connect to them";
-	return discover(desc, argc, argv, true);
+	return fdiscover(desc, argc, argv, true);
 }
 
 static int connect_cmd(int argc, char **argv, struct command *command, struct plugin *plugin)
 {
 	const char *desc = "Connect to NVMeoF subsystem";
-	return connect(desc, argc, argv);
+	return fconnect(desc, argc, argv);
 }
 
 static int disconnect_cmd(int argc, char **argv, struct command *command, struct plugin *plugin)
 {
 	const char *desc = "Disconnect from NVMeoF subsystem";
-	return disconnect(desc, argc, argv);
+	return fdisconnect(desc, argc, argv);
 }
 
 void register_extension(struct plugin *plugin)
@@ -4534,9 +4554,22 @@ int main(int argc, char **argv)
 	}
 	setlocale(LC_ALL, "");
 
+	if (0 == access("spdk.conf", R_OK)) {
+		if (spdk_bypass_cmd(argv[1]) == false) {
+			ret = spdk_main(argc - 1, &argv[1]);
+			if (ret != 0) {
+				exit(1);
+			}
+		}
+	}
+
 	ret = handle_plugin(argc - 1, &argv[1], nvme.extensions);
 	if (ret == -ENOTTY)
 		general_help(&builtin);
+
+	if (g_spdk_enabled) {
+		nvme_spdk_cleanup();
+	}
 
 	return ret;
 }

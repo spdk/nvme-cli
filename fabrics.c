@@ -37,6 +37,7 @@
 
 #include "parser.h"
 #include "nvme-ioctl.h"
+#include "spdk-nvme.h"
 #include "fabrics.h"
 
 #include "nvme.h"
@@ -809,7 +810,7 @@ out:
 	return ret;
 }
 
-int discover(const char *desc, int argc, char **argv, bool connect)
+int fdiscover(const char *desc, int argc, char **argv, bool connect)
 {
 	char argstr[BUF_SIZE];
 	int ret;
@@ -836,6 +837,10 @@ int discover(const char *desc, int argc, char **argv, bool connect)
 
 	cfg.nqn = NVME_DISC_SUBSYS_NAME;
 
+	if (g_spdk_enabled == true) {
+		nvme_spdk_nvmf_probe(cfg.traddr, cfg.trsvcid, cfg.nqn);
+	}
+
 	if (!cfg.transport && !cfg.traddr) {
 		return discover_from_conf_file(desc, argstr,
 				command_line_options, connect);
@@ -848,7 +853,7 @@ int discover(const char *desc, int argc, char **argv, bool connect)
 	}
 }
 
-int connect(const char *desc, int argc, char **argv)
+int fconnect(const char *desc, int argc, char **argv)
 {
 	char argstr[BUF_SIZE];
 	int instance, ret;
@@ -881,6 +886,10 @@ int connect(const char *desc, int argc, char **argv)
 	if (!cfg.nqn) {
 		fprintf(stderr, "need a -n argument\n");
 		return -EINVAL;
+	}
+
+	if (g_spdk_enabled == true) {
+		nvme_spdk_nvmf_probe(cfg.traddr, cfg.trsvcid, cfg.nqn);
 	}
 
 	instance = add_ctrl(argstr);
@@ -973,7 +982,7 @@ static int disconnect_by_device(char *device)
 	return remove_ctrl(instance);
 }
 
-int disconnect(const char *desc, int argc, char **argv)
+int fdisconnect(const char *desc, int argc, char **argv)
 {
 	const char *nqn = "nqn name";
 	const char *device = "nvme device";
