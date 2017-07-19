@@ -39,6 +39,7 @@
 #include <inttypes.h>
 #include <stdbool.h>
 #include <string.h>
+#include <regex.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 
@@ -115,6 +116,7 @@ attach_cb(void *cb_ctx, const struct spdk_nvme_transport_id *trid,
 			g_spdk_dev[g_num_ctrlr].fd = socket(AF_UNIX, SOCK_RAW, 0);
 			g_spdk_dev[g_num_ctrlr].io_qpair = io_qpair;
 			g_spdk_dev[g_num_ctrlr].ns_id = i;
+			snprintf(g_spdk_dev[g_num_ctrlr].traddr, sizeof(trid->traddr), "%s", trid->traddr);
 			if (trid->trtype == SPDK_NVME_TRANSPORT_RDMA) {
 				snprintf(g_spdk_dev[g_num_ctrlr].subnqn, sizeof(trid->subnqn), "%s", trid->subnqn);
 			}
@@ -179,6 +181,38 @@ spdk_unsupported_cmd(char *cmd_str)
 }
 
 static int
+nvme_spdk_ereg(char *pattern, char *value)
+{
+	int r, cflags = 0;
+	regmatch_t pm[10];
+	const size_t nmatch = 10;
+	regex_t reg;
+
+	r = regcomp(&reg, pattern, cflags);
+	if (r == 0) {
+		r = regexec(&reg, value, nmatch, pm, cflags);
+	}
+
+	regfree(&reg);
+
+	return r;
+}
+
+static bool
+nvme_spdk_is_bdf_dev(char *str)
+{
+	/* The format is DDDD:BB:DD.F */
+	char *reg = "^[0-9]\\{4\\}:[0-9a-fA-F]\\{2\\}:[0-9a-fA-F]\\{2\\}\\.[0-9a-fA-F]$";
+
+	if (nvme_spdk_ereg(reg, str) == 0) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+static int
 spdk_parse_args(int argc, char **argv, bool *probe)
 {
 	*probe = true;
@@ -201,9 +235,15 @@ spdk_parse_args(int argc, char **argv, bool *probe)
 		return 0;
 	}
 
-	snprintf(g_spdk_dev[g_num_ctrlr].traddr, SPDK_TRADDR_MAX_LEN, "%s", argv[1]);
+	for (int i = 1; i < argc; i++) {
+		if (nvme_spdk_is_bdf_dev(argv[i])) {
+			snprintf(g_spdk_dev[g_num_ctrlr].traddr, SPDK_TRADDR_MAX_LEN, "%s", argv[i]);
+			return 0;
+		}
+	}
 
-	return 0;
+	fprintf(stderr, "device information needed, example: 0000:07:00.0\n");
+	return 1;
 }
 
 int
