@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b685f24f_d2e0a456",
+        "filename": "spdk-nvme.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1011207
+      },
+      "writtenOn": "2017-07-20T05:43:45Z",
+      "side": 1,
+      "message": "this code line looks like missing after rebasing and merging several times. Added it back.",
+      "range": {
+        "startLine": 118,
+        "startChar": 3,
+        "endLine": 118,
+        "endChar": 86
+      },
+      "revId": "f50fcac91efcae89ea8ed2f11ed6c330bc502c71",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e70a9154_b3dd79b9",
+        "filename": "spdk-nvme.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1011207
+      },
+      "writtenOn": "2017-07-20T05:43:45Z",
+      "side": 1,
+      "message": "added a rough check function for the bdf used for SPDK.",
+      "range": {
+        "startLine": 185,
+        "startChar": 1,
+        "endLine": 186,
+        "endChar": 24
+      },
+      "revId": "f50fcac91efcae89ea8ed2f11ed6c330bc502c71",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "559e85de_51d51123",
+        "filename": "spdk-nvme.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1011207
+      },
+      "writtenOn": "2017-07-20T05:43:45Z",
+      "side": 1,
+      "message": "An issue raised that the device parameter needs to be as the first parameter. Added a check function so that the device parameter can be at other places.",
+      "range": {
+        "startLine": 217,
+        "startChar": 2,
+        "endLine": 217,
+        "endChar": 36
+      },
+      "revId": "f50fcac91efcae89ea8ed2f11ed6c330bc502c71",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
