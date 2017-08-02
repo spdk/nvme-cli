@@ -66,6 +66,35 @@ struct spdk_nvme_passthru_cmd {
 	bool				failed;
 };
 
+struct spdk_nvmf_config {
+	char *nqn;
+	char *transport;
+	char *traddr;
+	char *trsvcid;
+	char *host_traddr;
+	char *hostnqn;
+	char *nr_io_queues;
+	char *keep_alive_tmo;
+};
+
+static struct spdk_nvmf_config *g_nvmf_conf;
+
+static void
+nvme_spdk_nvmf_setup_opts(struct spdk_nvme_ctrlr_opts *opts, struct spdk_nvmf_config *conf)
+{
+	if (conf->hostnqn) {
+		snprintf(opts->hostnqn, sizeof(opts->hostnqn), "%s", conf->hostnqn);
+	}
+
+	if (conf->nr_io_queues) {
+		opts->num_io_queues = atoi(conf->nr_io_queues);
+	}
+
+	if (conf->keep_alive_tmo) {
+		opts->keep_alive_timeout_ms = atoi(conf->keep_alive_tmo) * 1000;
+	}
+}
+
 static bool
 probe_cb(void *cb_ctx, const struct spdk_nvme_transport_id *trid,
 	 struct spdk_nvme_ctrlr_opts *opts)
@@ -78,6 +107,7 @@ probe_cb(void *cb_ctx, const struct spdk_nvme_transport_id *trid,
 		if (trid->trtype == SPDK_NVME_TRANSPORT_RDMA) {
 			if ((strcmp(g_spdk_dev[g_num_ctrlr].trsvcid, trid->trsvcid) == 0) &&
 			    (strcmp(g_spdk_dev[g_num_ctrlr].subnqn, trid->subnqn) == 0)) {
+				nvme_spdk_nvmf_setup_opts(opts, g_nvmf_conf);
 				return true;
 			}
 		} else {
@@ -290,13 +320,15 @@ spdk_main(int argc, char **argv)
 }
 
 int
-nvme_spdk_nvmf_probe(char *traddr, char *trsvcid, char *subnqn)
+nvme_spdk_nvmf_probe(void *conf)
 {
+	g_nvmf_conf = (struct spdk_nvmf_config *)conf;
+
 	g_trid.trtype = SPDK_NVMF_TRTYPE_RDMA;
 	g_trid.adrfam = SPDK_NVMF_ADRFAM_IPV4;
-	snprintf(g_trid.traddr, sizeof(g_trid.traddr), traddr);
-	snprintf(g_trid.trsvcid, sizeof(g_trid.trsvcid), trsvcid);
-	snprintf(g_trid.subnqn, sizeof(g_trid.subnqn), subnqn);
+	snprintf(g_trid.traddr, sizeof(g_trid.traddr), "%s", g_nvmf_conf->traddr);
+	snprintf(g_trid.trsvcid, sizeof(g_trid.trsvcid), "%s", g_nvmf_conf->trsvcid);
+	snprintf(g_trid.subnqn, sizeof(g_trid.subnqn), "%s", g_nvmf_conf->nqn);
 	snprintf(g_spdk_dev[g_num_ctrlr].traddr, sizeof(g_trid.traddr), "%s", g_trid.traddr);
 	snprintf(g_spdk_dev[g_num_ctrlr].trsvcid, sizeof(g_trid.trsvcid), "%s", g_trid.trsvcid);
 	snprintf(g_spdk_dev[g_num_ctrlr].subnqn, sizeof(g_trid.subnqn), "%s", g_trid.subnqn);
