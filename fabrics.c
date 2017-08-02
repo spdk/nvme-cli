@@ -837,7 +837,7 @@ int fdiscover(const char *desc, int argc, char **argv, bool connect)
 	cfg.nqn = NVME_DISC_SUBSYS_NAME;
 
 	if (g_spdk_enabled == true) {
-		nvme_spdk_nvmf_probe(cfg.traddr, cfg.trsvcid, cfg.nqn);
+		nvme_spdk_nvmf_probe((void *)&cfg);
 	}
 
 	if (!cfg.transport && !cfg.traddr) {
@@ -884,7 +884,7 @@ int fconnect(const char *desc, int argc, char **argv)
 	}
 
 	if (g_spdk_enabled == true) {
-		nvme_spdk_nvmf_probe(cfg.traddr, cfg.trsvcid, cfg.nqn);
+		nvme_spdk_nvmf_probe((void *)&cfg);
 	}
 
 	instance = add_ctrl(argstr);
