@@ -47,23 +47,7 @@
 
 #define NVMF_HOSTID_SIZE	36
 
-static struct config {
-	char *nqn;
-	char *transport;
-	char *traddr;
-	char *trsvcid;
-	char *host_traddr;
-	char *hostnqn;
-	char *hostid;
-	char *nr_io_queues;
-	char *queue_size;
-	char *keep_alive_tmo;
-	char *reconnect_delay;
-	char *ctrl_loss_tmo;
-	char *raw;
-	char *device;
-	int  duplicate_connect;
-} cfg = { NULL };
+static struct config cfg = { NULL };
 
 #define BUF_SIZE		4096
 #define PATH_NVME_FABRICS	"/dev/nvme-fabrics"
@@ -838,7 +822,7 @@ int fdiscover(const char *desc, int argc, char **argv, bool connect)
 	cfg.nqn = NVME_DISC_SUBSYS_NAME;
 
 	if (g_spdk_enabled == true) {
-		nvme_spdk_nvmf_probe(cfg.traddr, cfg.trsvcid, cfg.nqn);
+		nvme_spdk_nvmf_probe((void *)&cfg);
 	}
 
 	if (!cfg.transport && !cfg.traddr) {
@@ -889,7 +873,7 @@ int fconnect(const char *desc, int argc, char **argv)
 	}
 
 	if (g_spdk_enabled == true) {
-		nvme_spdk_nvmf_probe(cfg.traddr, cfg.trsvcid, cfg.nqn);
+		nvme_spdk_nvmf_probe((void *)&cfg);
 	}
 
 	instance = add_ctrl(argstr);
