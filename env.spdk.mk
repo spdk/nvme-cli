@@ -48,4 +48,4 @@ SPDK_LIB += $(SPDK_BUILD_DIR)/libspdk_log.a \
 	$(DPDK_LIB) \
 	-Wl,--no-whole-archive
 
-override LDFLAGS += -ldl -pthread -lrt -lrdmacm -libverbs $(SPDK_LIB) $(SPDK_INC)
+override LDFLAGS += -ldl -pthread -lrt -lrdmacm -lnuma -libverbs $(SPDK_LIB) $(SPDK_INC)
