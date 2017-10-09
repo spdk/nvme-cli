@@ -332,8 +332,10 @@ spdk_main(int argc, char **argv)
 }
 
 int
-nvme_spdk_nvmf_probe(void *conf)
+nvme_spdk_nvmf_connect(void *conf)
 {
+	struct spdk_nvme_ctrlr *ctrlr;
+
 	g_nvmf_conf = (struct config *)conf;
 
 	g_trid.trtype = SPDK_NVMF_TRTYPE_RDMA;
@@ -345,10 +347,14 @@ nvme_spdk_nvmf_probe(void *conf)
 	snprintf(g_spdk_dev[g_num_ctrlr].trsvcid, sizeof(g_trid.trsvcid), "%s", g_trid.trsvcid);
 	snprintf(g_spdk_dev[g_num_ctrlr].subnqn, sizeof(g_trid.subnqn), "%s", g_trid.subnqn);
 
-	if (spdk_nvme_probe(&g_trid, NULL, probe_cb, attach_cb, NULL) != 0) {
-		fprintf(stderr, "spdk_nvme_probe() failed\n");
+	ctrlr = spdk_nvme_connect(&g_trid, NULL, 0);
+	if (ctrlr == NULL) {
+		fprintf(stderr, "spdk_nvme_connect() failed\n");
 		return 1;
 	}
+
+	/* Explicitly call the attach_cb to setup the connected ctrlr. */
+	attach_cb(NULL, &g_trid, ctrlr, NULL);
 
 	return 0;
 }
