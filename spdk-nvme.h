@@ -67,7 +67,7 @@ bool spdk_bypass_cmd(char *cmd_str);
 
 int spdk_main(int argc, char **argv);
 
-int nvme_spdk_nvmf_probe(void *conf);
+int nvme_spdk_nvmf_connect(void *conf);
 
 int nvme_spdk_submit_cmd_passthru(unsigned int fd, struct nvme_passthru_cmd *cmd, bool admin);
 
