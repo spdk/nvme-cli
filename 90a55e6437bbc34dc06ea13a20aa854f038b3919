@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "523674b9_e500418d",
+        "filename": "spdk-nvme.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1011207
+      },
+      "writtenOn": "2017-10-10T21:23:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ed3b3a0d_d3d25f85",
+      "revId": "90a55e6437bbc34dc06ea13a20aa854f038b3919",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8df5ac8c_e62865d9",
         "filename": "spdk-nvme.c",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2017-10-10T18:10:29Z",
       "side": 1,
       "message": "These snprintf() calls all need to be fixed to avoid format string vulnerabilities.\n\nThey should not pass the user-provided string directly as the format string, but instead should use \"%s\":\n\n    snprintf(g_trid.traddr, sizeof(g_trid.traddr), \"%s\", g_nvmf_conf-\u003etraddr);",
+      "revId": "90a55e6437bbc34dc06ea13a20aa854f038b3919",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c2614a09_e2fb0d9b",
+        "filename": "spdk-nvme.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 329,
+      "author": {
+        "id": 1011207
+      },
+      "writtenOn": "2017-10-10T21:23:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8df5ac8c_e62865d9",
       "revId": "90a55e6437bbc34dc06ea13a20aa854f038b3919",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
