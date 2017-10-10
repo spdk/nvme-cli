@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d7fe17cd_2d218f14",
+        "filename": "spdk-nvme.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 346,
+      "author": {
+        "id": 1010525
+      },
+      "writtenOn": "2017-10-10T18:10:37Z",
+      "side": 1,
+      "message": "What happens here if this isn\u0027t a discovery controller? It looks like we just leak the controller handle and never use it anywhere.",
+      "revId": "7654669be5896fa1ab5ca0110bf6defad2ea99c8",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
