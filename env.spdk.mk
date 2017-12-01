@@ -39,7 +39,9 @@ SPDK_INC := -I$(SPDK_ROOT_DIR)/include/
 
 DPDK_LIB = $(DPDK_BUILD_DIR)/lib/librte_eal.a \
 	$(DPDK_BUILD_DIR)/lib/librte_mempool.a \
-	$(DPDK_BUILD_DIR)/lib/librte_ring.a
+	$(DPDK_BUILD_DIR)/lib/librte_ring.a \
+	$(DPDK_BUILD_DIR)/lib/librte_pci.a \
+	$(DPDK_BUILD_DIR)/lib/librte_bus_pci.a
 
 SPDK_LIB += $(SPDK_BUILD_DIR)/libspdk_log.a \
 	$(SPDK_BUILD_DIR)/libspdk_nvme.a \
