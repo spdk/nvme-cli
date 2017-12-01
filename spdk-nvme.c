@@ -276,9 +276,9 @@ nvme_spdk_nvmf_probe(char *traddr, char *trsvcid, char *subnqn)
 {
 	g_trid.trtype = SPDK_NVMF_TRTYPE_RDMA;
 	g_trid.adrfam = SPDK_NVMF_ADRFAM_IPV4;
-	snprintf(g_trid.traddr, sizeof(g_trid.traddr), traddr);
-	snprintf(g_trid.trsvcid, sizeof(g_trid.trsvcid), trsvcid);
-	snprintf(g_trid.subnqn, sizeof(g_trid.subnqn), subnqn);
+	snprintf(g_trid.traddr, sizeof(g_trid.traddr),"%s" ,traddr);
+	snprintf(g_trid.trsvcid, sizeof(g_trid.trsvcid), "%s" ,trsvcid);
+	snprintf(g_trid.subnqn, sizeof(g_trid.subnqn), "%s",subnqn);
 	snprintf(g_spdk_dev[g_num_ctrlr].traddr, sizeof(g_trid.traddr), "%s", g_trid.traddr);
 	snprintf(g_spdk_dev[g_num_ctrlr].trsvcid, sizeof(g_trid.trsvcid), "%s", g_trid.trsvcid);
 	snprintf(g_spdk_dev[g_num_ctrlr].subnqn, sizeof(g_trid.subnqn), "%s", g_trid.subnqn);
