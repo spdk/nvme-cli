@@ -1,0 +1,8 @@
+Code-Review+2: Jim Harris <james.r.harris@intel.com>
+Code-Review+2: Daniel Verkamp <daniel.verkamp@intel.com>
+Verified+1: Daniel Verkamp <daniel.verkamp@intel.com>
+Submitted-by: Daniel Verkamp <daniel.verkamp@intel.com>
+Submitted-at: Fri, 08 Dec 2017 13:07:12 -0500
+Reviewed-on: https://review.gerrithub.io/389940
+Project: spdk/nvme-cli
+Branch: refs/heads/spdk
