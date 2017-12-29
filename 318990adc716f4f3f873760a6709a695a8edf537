@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "027ebd5c_1eda733a",
+        "filename": "spdk-nvme.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1010525
+      },
+      "writtenOn": "2017-12-29T20:34:56Z",
+      "side": 1,
+      "message": "I\u0027m not sure I understand why this needs to know if this is a BDF; what else can it be? What about NVMe-oF addresses?",
+      "revId": "318990adc716f4f3f873760a6709a695a8edf537",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
