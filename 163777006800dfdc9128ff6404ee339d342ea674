@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9ff7827a_91a7e312",
+        "filename": "spdk-nvme.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1010525
+      },
+      "writtenOn": "2017-12-29T20:37:40Z",
+      "side": 1,
+      "message": "Is this supposed to be the same type as struct config in fabrics.c? That seems very fragile - it should probably be moved to a header instead if this is supposed to be shared.",
+      "revId": "163777006800dfdc9128ff6404ee339d342ea674",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
