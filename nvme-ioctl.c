@@ -89,7 +89,7 @@ int nvme_get_nsid(int fd)
 	return ioctl(fd, NVME_IOCTL_ID);
 }
 
-int nvme_submit_passthru(int fd, int ioctl_cmd, struct nvme_passthru_cmd *cmd)
+int nvme_submit_passthru(int fd, __u64 ioctl_cmd, struct nvme_passthru_cmd *cmd)
 {
 	if (ioctl_cmd == NVME_IOCTL_ADMIN_CMD) {
 		if (nvme_spdk_is_valid_fd(fd) == 0) {
