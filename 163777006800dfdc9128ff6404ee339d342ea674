@@ -16,6 +16,24 @@
       "revId": "163777006800dfdc9128ff6404ee339d342ea674",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b62e37cf_d869bc51",
+        "filename": "spdk-nvme.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1011207
+      },
+      "writtenOn": "2018-01-11T02:35:40Z",
+      "side": 1,
+      "message": "Yes. Let me change the nvme-cli code to move this to a shared location. Thanks.",
+      "parentUuid": "9ff7827a_91a7e312",
+      "revId": "163777006800dfdc9128ff6404ee339d342ea674",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
