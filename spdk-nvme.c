@@ -201,7 +201,12 @@ spdk_parse_args(int argc, char **argv, bool *probe)
 		return 0;
 	}
 
-	snprintf(g_spdk_dev[g_num_ctrlr].traddr, SPDK_TRADDR_MAX_LEN, "%s", argv[1]);
+	/* Commands for Intel plugin */
+	if (strcmp(argv[0], "intel") == 0) {
+		snprintf(g_spdk_dev[g_num_ctrlr].traddr, SPDK_TRADDR_MAX_LEN, "%s", argv[2]);
+	} else {
+		snprintf(g_spdk_dev[g_num_ctrlr].traddr, SPDK_TRADDR_MAX_LEN, "%s", argv[1]);
+	}
 
 	return 0;
 }
@@ -361,7 +366,7 @@ nvme_spdk_submit_cmd_passthru(unsigned int fd, struct nvme_passthru_cmd *cmd, bo
 	enum spdk_nvme_data_transfer xfer = spdk_nvme_opc_get_data_transfer(cmd->opcode);
 
 	if (cmd->data_len != 0) {
-		contig_buffer = spdk_dma_zmalloc(cmd->data_len, 0, NULL);
+		contig_buffer = spdk_dma_zmalloc(cmd->data_len, 0x1000, NULL);
 		if (!contig_buffer) {
 			return 1;
 		}
