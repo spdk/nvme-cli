@@ -16,6 +16,24 @@
       "revId": "318990adc716f4f3f873760a6709a695a8edf537",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "41825eae_9e0d12e2",
+        "filename": "spdk-nvme.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1011207
+      },
+      "writtenOn": "2018-01-11T02:26:57Z",
+      "side": 1,
+      "message": "This is for the local controller with the bdf. NVMe-oF will do the probe later after the NVMe-oF parameters have been parsed.",
+      "parentUuid": "027ebd5c_1eda733a",
+      "revId": "318990adc716f4f3f873760a6709a695a8edf537",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
