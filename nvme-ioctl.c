@@ -186,7 +186,9 @@ int nvme_io(int fd, __u8 opcode, __u64 slba, __u16 nblocks, __u16 control,
 		.apptag		= appmask,
 	};
 
-	if (g_spdk_enabled == true) {
+	if (nvme_spdk_is_valid_fd(fd) == 0) {
+		/* nblocks is zero based and add 1 for SPDK which is one based */
+		io.nblocks++;
 		return nvme_spdk_io(fd, &io);
 	}
 
@@ -232,6 +234,11 @@ int nvme_passthru_io(int fd, __u8 opcode, __u8 flags, __u16 rsvd,
 int nvme_write_zeros(int fd, __u32 nsid, __u64 slba, __u16 nlb,
 		     __u16 control, __u32 reftag, __u16 apptag, __u16 appmask)
 {
+	if (nvme_spdk_is_valid_fd(fd) == 0) {
+		/* nlb is zero based and add 1 for SPDK which is one based */
+		nlb++;
+	}
+
 	struct nvme_passthru_cmd cmd = {
 		.opcode		= nvme_cmd_write_zeroes,
 		.nsid		= nsid,
@@ -247,6 +254,11 @@ int nvme_write_zeros(int fd, __u32 nsid, __u64 slba, __u16 nlb,
 
 int nvme_write_uncorrectable(int fd, __u32 nsid, __u64 slba, __u16 nlb)
 {
+	if (nvme_spdk_is_valid_fd(fd) == 0) {
+		/* nlb is zero based and add 1 for SPDK which is one based */
+		nlb++;
+	}
+
 	struct nvme_passthru_cmd cmd = {
 		.opcode		= nvme_cmd_write_uncor,
 		.nsid		= nsid,
