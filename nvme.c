@@ -1629,6 +1629,11 @@ static int show_registers(int argc, char **argv, struct command *cmd, struct plu
 	if (fd < 0)
 		return fd;
 
+	if (nvme_spdk_is_valid_fd(fd) == 0) {
+		nvme_spdk_show_registers(fd);
+		return 0;
+	}
+
 	bar = get_registers();
 	if (!bar)
 		return ENODEV;
