@@ -557,6 +557,9 @@ nvme_spdk_io(unsigned int fd, struct nvme_user_io *io)
 
 	int sector_size = spdk_nvme_ns_get_sector_size(ns);
 
+	/* nblocks is zero based and add 1 for SPDK which is one based */
+	io->nblocks++;
+
 	payload = spdk_dma_zmalloc(io->nblocks * sector_size, 0, NULL);
 	if (!payload) {
 		rc = ENOMEM;
