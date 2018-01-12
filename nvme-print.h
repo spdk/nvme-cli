@@ -33,6 +33,9 @@ void show_endurance_log(struct nvme_endurance_group_log *endurance_group,
 void show_sanitize_log(struct nvme_sanitize_log_page *sanitize, unsigned int mode, const char *devname);
 void show_ctrl_registers(void *bar, unsigned int mode, bool fabrics);
 void show_single_property(int offset, uint64_t prop, int human);
+void show_registers_cap(struct nvme_bar_cap *cap);
+void show_registers_csts(__u32 csts);
+void show_registers_version(__u32 vs);
 void show_nvme_id_ns_descs(void *data);
 void show_list_items(struct list_item *list_items, unsigned len);
 void show_nvme_subsystem_list(struct subsys_list_item *slist, int n);
