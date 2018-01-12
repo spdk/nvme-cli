@@ -85,4 +85,6 @@ void nvme_spdk_cleanup(void);
 
 int nvme_spdk_is_valid_fd(unsigned int fd);
 
+void nvme_spdk_show_registers(unsigned int fd);
+
 #endif
