@@ -186,7 +186,7 @@ int nvme_io(int fd, __u8 opcode, __u64 slba, __u16 nblocks, __u16 control,
 		.apptag		= appmask,
 	};
 
-	if (g_spdk_enabled == true) {
+	if (nvme_spdk_is_valid_fd(fd) == 0) {
 		return nvme_spdk_io(fd, &io);
 	}
 
