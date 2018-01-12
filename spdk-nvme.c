@@ -424,6 +424,16 @@ nvme_spdk_submit_cmd_passthru(unsigned int fd, struct nvme_passthru_cmd *cmd, bo
 	} else {
 		io_qpair = nvme_spdk_get_io_qpair_by_fd(fd);
 
+		switch (cmd->opcode) {
+			/* Block count is zero based and add 1 for SPDK which is one based */
+			case nvme_cmd_write_zeroes:
+			case nvme_cmd_write_uncor:
+				cmd->cdw12++;
+				break;
+			default:
+				break;
+		}
+
 		rc = spdk_nvme_ctrlr_cmd_io_raw(ctrlr, io_qpair, spdk_cmd, contig_buffer, cmd->data_len,
 						nvme_spdk_get_cmd_completion, &spdk_nvme_cmd);
 	}
@@ -556,6 +566,9 @@ nvme_spdk_io(unsigned int fd, struct nvme_user_io *io)
 	struct spdk_nvme_ns *ns = spdk_nvme_ctrlr_get_ns(ctrlr, ns_id);
 
 	int sector_size = spdk_nvme_ns_get_sector_size(ns);
+
+	/* nblocks is zero based and add 1 for SPDK which is one based */
+	io->nblocks++;
 
 	payload = spdk_dma_zmalloc(io->nblocks * sector_size, 0, NULL);
 	if (!payload) {
