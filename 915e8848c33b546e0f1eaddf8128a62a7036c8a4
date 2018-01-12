@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f73182aa_99363f93",
+        "filename": "spdk-nvme.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1011207
+      },
+      "writtenOn": "2018-01-12T08:58:22Z",
+      "side": 1,
+      "message": "With this change, in the other patch \"https://review.gerrithub.io/#/c/394384/1/spdk-nvme.c\" to support Intel specific commands to check \"intel\" argument is not needed. Here the BDF parameter can at any order as the input parameters instead of in that patch at the fixed place.\n\nIf any one of these two patches are merged first, will test and rebase the other one later.\n\nThanks.",
+      "range": {
+        "startLine": 239,
+        "startChar": 2,
+        "endLine": 239,
+        "endChar": 36
+      },
+      "revId": "915e8848c33b546e0f1eaddf8128a62a7036c8a4",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
