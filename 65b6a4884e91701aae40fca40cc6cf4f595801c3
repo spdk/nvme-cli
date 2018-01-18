@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3900c013_c7de21b0",
+        "filename": "nvme-ioctl.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1010525
+      },
+      "writtenOn": "2018-01-18T22:29:04Z",
+      "side": 1,
+      "message": "This doesn\u0027t seem right; we should be handling this inside the SPDK hook for the passthru IOCTL, not by modifying the parameters to the IOCTL.\n\nIn general, all of this magic stuff should go away if we just implement passthru by calling the NVMe library io_raw()/admin_raw() functions.  That would let us delete a bunch of unnecessary code as well.",
+      "revId": "65b6a4884e91701aae40fca40cc6cf4f595801c3",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
