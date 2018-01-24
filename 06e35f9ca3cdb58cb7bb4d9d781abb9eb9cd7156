@@ -1,0 +1,8 @@
+Code-Review+1: Hailiang Wang <hailiangx.e.wang@intel.com>
+Code-Review+2: Daniel Verkamp <daniel.verkamp@intel.com>
+Verified+1: Daniel Verkamp <daniel.verkamp@intel.com>
+Submitted-by: Daniel Verkamp <daniel.verkamp@intel.com>
+Submitted-at: Wed, 24 Jan 2018 17:36:58 -0500
+Reviewed-on: https://review.gerrithub.io/370411
+Project: spdk/nvme-cli
+Branch: refs/heads/spdk
