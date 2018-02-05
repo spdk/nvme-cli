@@ -16,6 +16,24 @@
       "revId": "65b6a4884e91701aae40fca40cc6cf4f595801c3",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bc5b3344_f8415974",
+        "filename": "nvme-ioctl.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1011207
+      },
+      "writtenOn": "2018-02-05T09:12:38Z",
+      "side": 1,
+      "message": "Yes. nvme_spdk_submit_cmd_passthru() called the io_raw/admin_raw functions internally. Are you saying that there is no need to call the I/O public APIs? On the other hand, here it is to handle the zero based block count used in nvme-cli especially which is only meaningful nvme-cli scenario as our SPDK code itself is one based for this required block count.",
+      "parentUuid": "3900c013_c7de21b0",
+      "revId": "65b6a4884e91701aae40fca40cc6cf4f595801c3",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
