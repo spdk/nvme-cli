@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fb88928_366014ea",
+        "filename": "nvme-ioctl.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1011222
+      },
+      "writtenOn": "2018-02-09T04:33:40Z",
+      "side": 1,
+      "message": "why is this cast needed?",
+      "revId": "5d77fa477d56987dcd113b11af748c31f8907a31",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a23bf027_81f00aa8",
+        "filename": "spdk-nvme.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 425,
+      "author": {
+        "id": 1011222
+      },
+      "writtenOn": "2018-02-09T04:33:40Z",
+      "side": 1,
+      "message": "is 4KiB alignment required?",
+      "revId": "5d77fa477d56987dcd113b11af748c31f8907a31",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
