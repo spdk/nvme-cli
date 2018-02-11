@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "6875391a_ae220375",
+        "filename": "nvme-ioctl.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1011207
+      },
+      "writtenOn": "2018-02-11T07:05:55Z",
+      "side": 1,
+      "message": "Added some debugging information, NVME_IOCTL_ADMIN_CMD is \"long unsigned int\" while ioctl_cmd is \"int\" type. So the comparison fails here. The value itself is 0xc0484e41 so that casting it to \"int\" type.\n\nBy the way, the NVME_IOCTL_ADMIN_CMD is used in several function calls as the parameter for the \"int\" type and there has some implicit conversions already.",
+      "parentUuid": "33cc663c_0e9f8ff4",
+      "revId": "5d77fa477d56987dcd113b11af748c31f8907a31",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a23bf027_81f00aa8",
         "filename": "spdk-nvme.c",
         "patchSetId": 2
