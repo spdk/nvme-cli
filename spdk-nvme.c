@@ -542,10 +542,11 @@ nvme_spdk_ns_sector_size(unsigned int fd, int *sector_size)
 	int ns_id = nvme_spdk_get_nsid(fd);
 
 	struct spdk_nvme_ctrlr *ctrlr = nvme_spdk_get_ctrlr_by_fd(fd);
+	if(ctrlr != NULL){
+		struct spdk_nvme_ns *ns = spdk_nvme_ctrlr_get_ns(ctrlr, ns_id);
 
-	struct spdk_nvme_ns *ns = spdk_nvme_ctrlr_get_ns(ctrlr, ns_id);
-
-	*sector_size = spdk_nvme_ns_get_sector_size(ns);
+		*sector_size = spdk_nvme_ns_get_sector_size(ns);
+	}
 }
 
 static void
