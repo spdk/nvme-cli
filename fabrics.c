@@ -838,7 +838,7 @@ int discover(const char *desc, int argc, char **argv, bool connect)
 	}
 }
 
-int connect(const char *desc, int argc, char **argv)
+int fconnect(const char *desc, int argc, char **argv)
 {
 	char argstr[BUF_SIZE];
 	int instance, ret;
