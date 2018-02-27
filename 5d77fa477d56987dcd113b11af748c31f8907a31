@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "c12cee6c_fb80b259",
+        "filename": "nvme-ioctl.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1011222
+      },
+      "writtenOn": "2018-02-27T22:07:49Z",
+      "side": 1,
+      "message": "ok - I think this is OK for now - we can look at it again later if needed",
+      "parentUuid": "6875391a_ae220375",
+      "revId": "5d77fa477d56987dcd113b11af748c31f8907a31",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a23bf027_81f00aa8",
         "filename": "spdk-nvme.c",
         "patchSetId": 2
@@ -84,6 +102,24 @@
       "side": 1,
       "message": "Tested, if giving the \"0\" for the alignment, it will have some issue.",
       "parentUuid": "a23bf027_81f00aa8",
+      "revId": "5d77fa477d56987dcd113b11af748c31f8907a31",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8181decb_483a4ba3",
+        "filename": "spdk-nvme.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 425,
+      "author": {
+        "id": 1011222
+      },
+      "writtenOn": "2018-02-27T22:07:49Z",
+      "side": 1,
+      "message": "let\u0027s use 64 instead then",
+      "parentUuid": "bb08b259_9abc62b8",
       "revId": "5d77fa477d56987dcd113b11af748c31f8907a31",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
