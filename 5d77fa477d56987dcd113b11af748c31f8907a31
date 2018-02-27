@@ -73,6 +73,24 @@
     },
     {
       "key": {
+        "uuid": "6fe52ce4_c2dfa1ef",
+        "filename": "nvme-ioctl.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1010525
+      },
+      "writtenOn": "2018-02-27T22:11:14Z",
+      "side": 1,
+      "message": "Instead of casting NVME_IOCTL_ADMIN_CMD to int here, we should change the type of ioctl_cmd to unsigned long - this is the same type as the second parameter of ioctl() and should avoid any need for casting.",
+      "parentUuid": "c12cee6c_fb80b259",
+      "revId": "5d77fa477d56987dcd113b11af748c31f8907a31",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a23bf027_81f00aa8",
         "filename": "spdk-nvme.c",
         "patchSetId": 2
