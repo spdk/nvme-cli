@@ -91,6 +91,24 @@
     },
     {
       "key": {
+        "uuid": "8586e1e4_111f445d",
+        "filename": "nvme-ioctl.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1011207
+      },
+      "writtenOn": "2018-02-28T03:20:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6fe52ce4_c2dfa1ef",
+      "revId": "5d77fa477d56987dcd113b11af748c31f8907a31",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a23bf027_81f00aa8",
         "filename": "spdk-nvme.c",
         "patchSetId": 2
@@ -138,6 +156,24 @@
       "side": 1,
       "message": "let\u0027s use 64 instead then",
       "parentUuid": "bb08b259_9abc62b8",
+      "revId": "5d77fa477d56987dcd113b11af748c31f8907a31",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5713b548_5791c25e",
+        "filename": "spdk-nvme.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 425,
+      "author": {
+        "id": 1011207
+      },
+      "writtenOn": "2018-02-28T03:20:21Z",
+      "side": 1,
+      "message": "I\u0027ve changed to 128 instead which works here for the alignment.",
+      "parentUuid": "8181decb_483a4ba3",
       "revId": "5d77fa477d56987dcd113b11af748c31f8907a31",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
