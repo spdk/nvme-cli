@@ -45,8 +45,7 @@ SPDK_LIB += $(SPDK_BUILD_DIR)/libspdk_log.a \
 	$(SPDK_BUILD_DIR)/libspdk_nvme.a \
 	$(SPDK_BUILD_DIR)/libspdk_env_dpdk.a \
 	$(SPDK_BUILD_DIR)/libspdk_util.a \
-	$(DPDK_LIB) \
-	-Wl,--no-whole-archive
+	$(DPDK_LIB)
 
 override CFLAGS += -I$(SPDK_ROOT_DIR)/include
-override LDFLAGS += -ldl -pthread -lrt -lrdmacm -lnuma -libverbs $(SPDK_LIB)
+override LDFLAGS += -ldl -pthread -lrt -lrdmacm -lnuma -libverbs -Wl,--whole-archive $(SPDK_LIB) -Wl,--no-whole-archive

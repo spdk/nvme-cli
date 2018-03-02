@@ -39,7 +39,7 @@ OBJS := argconfig.o suffix.o parser.o nvme-print.o nvme-ioctl.o \
 	huawei-nvme.o netapp-nvme.o toshiba-nvme.o micron-nvme.o seagate-nvme.o spdk-nvme.o
 
 nvme: nvme.c nvme.h $(OBJS) NVME-VERSION-FILE
-	$(CC) $(CPPFLAGS) $(CFLAGS) nvme.c -o $(NVME) -Wl,--whole-archive $(SPDK_LIB) $(OBJS) $(LDFLAGS)
+	$(CC) $(CPPFLAGS) $(CFLAGS) nvme.c -o $(NVME) $(OBJS) $(LDFLAGS)
 
 nvme.o: nvme.c nvme.h nvme-print.h nvme-ioctl.h argconfig.h suffix.h nvme-lightnvm.h fabrics.h
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c $<
