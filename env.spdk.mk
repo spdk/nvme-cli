@@ -35,8 +35,6 @@ SPDK_ROOT_DIR ?= $(abspath $(CURDIR)/spdk)
 SPDK_BUILD_DIR ?=  $(SPDK_ROOT_DIR)/build/lib
 DPDK_BUILD_DIR ?= $(SPDK_ROOT_DIR)/dpdk/build
 
-SPDK_INC := -I$(SPDK_ROOT_DIR)/include/
-
 DPDK_LIB = $(DPDK_BUILD_DIR)/lib/librte_eal.a \
 	$(DPDK_BUILD_DIR)/lib/librte_mempool.a \
 	$(DPDK_BUILD_DIR)/lib/librte_ring.a \
@@ -50,4 +48,5 @@ SPDK_LIB += $(SPDK_BUILD_DIR)/libspdk_log.a \
 	$(DPDK_LIB) \
 	-Wl,--no-whole-archive
 
-override LDFLAGS += -ldl -pthread -lrt -lrdmacm -lnuma -libverbs $(SPDK_LIB) $(SPDK_INC)
+override CFLAGS += -I$(SPDK_ROOT_DIR)/include
+override LDFLAGS += -ldl -pthread -lrt -lrdmacm -lnuma -libverbs $(SPDK_LIB)
