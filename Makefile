@@ -44,7 +44,7 @@ nvme.o: nvme.c nvme.h nvme-print.h nvme-ioctl.h argconfig.h suffix.h nvme-lightn
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c $<
 
 %.o: %.c %.h nvme.h linux/nvme_ioctl.h
-	$(CC) $(CPPFLAGS) $(CFLAGS) $(SPDK_INC) -c $<
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c $<
 
 doc: $(NVME)
 	$(MAKE) -C Documentation
