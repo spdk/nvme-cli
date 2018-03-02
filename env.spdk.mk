@@ -35,9 +35,27 @@ SPDK_ROOT_DIR ?= $(abspath $(CURDIR)/spdk)
 SPDK_LIB_DIR ?= $(SPDK_ROOT_DIR)/build/lib
 DPDK_LIB_DIR ?= $(SPDK_ROOT_DIR)/dpdk/build/lib
 
+-include $(SPDK_ROOT_DIR)/CONFIG.local
+include $(SPDK_ROOT_DIR)/CONFIG
+
 override CFLAGS += -I$(SPDK_ROOT_DIR)/include
 override LDFLAGS += -ldl -pthread -lrt -lrdmacm -lnuma -libverbs \
 	-Wl,--whole-archive \
 	-L$(SPDK_LIB_DIR) -lspdk_log -lspdk_nvme -lspdk_env_dpdk -lspdk_util \
 	-L$(DPDK_LIB_DIR) -lrte_eal -lrte_mempool -lrte_ring -lrte_pci -lrte_bus_pci \
 	-Wl,--no-whole-archive
+
+ifeq ($(CONFIG_ASAN),y)
+override CFLAGS += -fsanitize=address
+override LDFLAGS += -fsanitize=address
+endif
+
+ifeq ($(CONFIG_UBSAN),y)
+override CFLAGS += -fsanitize=undefined
+override LDFLAGS += -fsanitize=undefined
+endif
+
+ifeq ($(CONFIG_TSAN),y)
+override CFLAGS += -fsanitize=thread
+override LDFLAGS += -fsanitize=thread
+endif
