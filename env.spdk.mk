@@ -32,20 +32,12 @@
 #
 
 SPDK_ROOT_DIR ?= $(abspath $(CURDIR)/spdk)
-SPDK_BUILD_DIR ?=  $(SPDK_ROOT_DIR)/build/lib
-DPDK_BUILD_DIR ?= $(SPDK_ROOT_DIR)/dpdk/build
-
-DPDK_LIB = $(DPDK_BUILD_DIR)/lib/librte_eal.a \
-	$(DPDK_BUILD_DIR)/lib/librte_mempool.a \
-	$(DPDK_BUILD_DIR)/lib/librte_ring.a \
-	$(DPDK_BUILD_DIR)/lib/librte_pci.a \
-	$(DPDK_BUILD_DIR)/lib/librte_bus_pci.a
-
-SPDK_LIB += $(SPDK_BUILD_DIR)/libspdk_log.a \
-	$(SPDK_BUILD_DIR)/libspdk_nvme.a \
-	$(SPDK_BUILD_DIR)/libspdk_env_dpdk.a \
-	$(SPDK_BUILD_DIR)/libspdk_util.a \
-	$(DPDK_LIB)
+SPDK_LIB_DIR ?= $(SPDK_ROOT_DIR)/build/lib
+DPDK_LIB_DIR ?= $(SPDK_ROOT_DIR)/dpdk/build/lib
 
 override CFLAGS += -I$(SPDK_ROOT_DIR)/include
-override LDFLAGS += -ldl -pthread -lrt -lrdmacm -lnuma -libverbs -Wl,--whole-archive $(SPDK_LIB) -Wl,--no-whole-archive
+override LDFLAGS += -ldl -pthread -lrt -lrdmacm -lnuma -libverbs \
+	-Wl,--whole-archive \
+	-L$(SPDK_LIB_DIR) -lspdk_log -lspdk_nvme -lspdk_env_dpdk -lspdk_util \
+	-L$(DPDK_LIB_DIR) -lrte_eal -lrte_mempool -lrte_ring -lrte_pci -lrte_bus_pci \
+	-Wl,--no-whole-archive
