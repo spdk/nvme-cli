@@ -16,6 +16,24 @@
       "revId": "479c515b421d10703d2b97a82a3c4c253381ad73",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8c553c61_e61629e3",
+        "filename": "nvme-print.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1685,
+      "author": {
+        "id": 1011222
+      },
+      "writtenOn": "2018-03-02T23:32:34Z",
+      "side": 1,
+      "message": "my guess is a compiler bug - it doesn\u0027t look at the size \"i\" actually could be and just assumes MAX_INT",
+      "parentUuid": "a2dc6f18_eea90622",
+      "revId": "479c515b421d10703d2b97a82a3c4c253381ad73",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
