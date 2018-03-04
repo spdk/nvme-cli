@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "040db447_873d33d7",
+        "filename": "env.spdk.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1011207
+      },
+      "writtenOn": "2018-03-04T07:02:32Z",
+      "side": 1,
+      "message": "maybe split to a new line here?",
+      "range": {
+        "startLine": 51,
+        "startChar": 97,
+        "endLine": 51,
+        "endChar": 118
+      },
+      "revId": "8a382fe54e132262d6631a709ae05979be94509e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
