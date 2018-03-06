@@ -59,3 +59,8 @@ ifeq ($(CONFIG_TSAN),y)
 override CFLAGS += -fsanitize=thread
 override LDFLAGS += -fsanitize=thread
 endif
+
+ifeq ($(CONFIG_COVERAGE), y)
+override CFLAGS += -fprofile-arcs -ftest-coverage
+override LDFLAGS += -fprofile-arcs -ftest-coverage
+endif
