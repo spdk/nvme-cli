@@ -22,6 +22,30 @@
       "revId": "8a382fe54e132262d6631a709ae05979be94509e",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a4cac5b_a09451e0",
+        "filename": "env.spdk.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1010525
+      },
+      "writtenOn": "2018-03-06T03:48:30Z",
+      "side": 1,
+      "message": "Agreed, but this is split in the next patch, so I am going to merge as-is.",
+      "parentUuid": "040db447_873d33d7",
+      "range": {
+        "startLine": 51,
+        "startChar": 97,
+        "endLine": 51,
+        "endChar": 118
+      },
+      "revId": "8a382fe54e132262d6631a709ae05979be94509e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
