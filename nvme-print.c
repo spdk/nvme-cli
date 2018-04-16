@@ -1774,7 +1774,7 @@ void show_registers_cap(struct nvme_bar_cap *cap)
 	printf("\tMaximum Queue Entries Supported (MQES): %u\n\n", cap->mqes + 1);
 }
 
-static void show_registers_version(__u32 vs)
+void show_registers_version(__u32 vs)
 {
 	printf("\tNVMe specification %d.%d\n\n", (vs & 0xffff0000) >> 16,  (vs & 0x0000ff00) >> 8);
 }
@@ -1844,7 +1844,7 @@ static void show_registers_csts_shst(__u8 shst)
 	}
 }
 
-static void show_registers_csts(__u32 csts)
+void show_registers_csts(__u32 csts)
 {
 	printf("\tProcessing Paused               (PP): %s\n", (csts & 0x00000020) ? "Yes":"No");
 	printf("\tNVM Subsystem Reset Occurred (NSSRO): %s\n", (csts & 0x00000010) ? "Yes":"No");

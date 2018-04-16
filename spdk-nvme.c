@@ -45,6 +45,7 @@
 
 #include "nvme-ioctl.h"
 #include "fabrics.h"
+#include "nvme-print.h"
 #include "spdk-nvme.h"
 
 #include "spdk/env.h"
@@ -193,10 +194,6 @@ spdk_bypass_cmd(char *cmd_str)
 static bool
 spdk_unsupported_cmd(char *cmd_str)
 {
-	if (strcmp(cmd_str, "show-regs") == 0) {
-		return true;
-	}
-
 	return false;
 }
 
@@ -666,4 +663,22 @@ exit:
 	}
 
 	return rc;
+}
+
+void
+nvme_spdk_show_registers(unsigned int fd)
+{
+	struct spdk_nvme_ctrlr *ctrlr = nvme_spdk_get_ctrlr_by_fd(fd);
+
+	union spdk_nvme_cap_register cap = spdk_nvme_ctrlr_get_regs_cap(ctrlr);
+	printf("cap     : %"PRIx64"\n", cap.raw);
+	show_registers_cap((struct nvme_bar_cap *)&cap.raw);
+
+	union spdk_nvme_vs_register vs = spdk_nvme_ctrlr_get_regs_vs(ctrlr);
+	printf("version : %x\n", vs.raw);
+	show_registers_version(vs.raw);
+
+	union spdk_nvme_csts_register csts = spdk_nvme_ctrlr_get_regs_csts(ctrlr);
+	printf("csts    : %x\n", csts.raw);
+	show_registers_csts(csts.raw);
 }
