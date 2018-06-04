@@ -16,6 +16,12 @@ ifeq ($(LIBUUID),0)
 	override LIB_DEPENDS += uuid
 endif
 
+ifeq ($(UIOCTL),1)
+	USER_IOCTL_LIB = $(SPDK_DIR)/build/lib/libspdk_user_ioctl.a
+	override LDFLAGS += $(USER_IOCTL_LIB)
+	override CFLAGS += -D USER_IOCTL
+endif
+
 RPMBUILD = rpmbuild
 TAR = tar
 RM = rm -f
@@ -34,15 +40,15 @@ NVME_DPKG_VERSION=1~`lsb_release -sc`
 OBJS := argconfig.o suffix.o parser.o nvme-print.o nvme-ioctl.o \
 	nvme-lightnvm.o fabrics.o json.o plugin.o intel-nvme.o \
 	lnvm-nvme.o memblaze-nvme.o wdc-nvme.o wdc-utils.o nvme-models.o \
-	huawei-nvme.o netapp-nvme.o
+	huawei-nvme.o netapp-nvme.o uni_ioctl.o
 
 nvme: nvme.c nvme.h $(OBJS) NVME-VERSION-FILE
 	$(CC) $(CPPFLAGS) $(CFLAGS) nvme.c -o $(NVME) $(OBJS) $(LDFLAGS)
 
-nvme.o: nvme.c nvme.h nvme-print.h nvme-ioctl.h argconfig.h suffix.h nvme-lightnvm.h fabrics.h
+nvme.o: nvme.c nvme.h nvme-print.h nvme-ioctl.h argconfig.h suffix.h nvme-lightnvm.h fabrics.h uni_ioctl.h
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c $<
 
-%.o: %.c %.h nvme.h linux/nvme_ioctl.h nvme-ioctl.h nvme-print.h argconfig.h
+%.o: %.c %.h nvme.h linux/nvme_ioctl.h nvme-ioctl.h nvme-print.h argconfig.h uni_ioctl.h
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c $<
 
 doc: $(NVME)
