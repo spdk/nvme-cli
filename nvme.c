@@ -1045,22 +1045,65 @@ static char *nvme_char_from_block(char *block)
 	return block;
 }
 
-static void *get_registers(void)
+static char *user_nvme_char_from_block(char *block)
+{
+	char slen[16];
+	unsigned len;
+	char *block_reverse = NULL;
+	int i;
+
+	block_reverse = malloc(strlen(block) + 1);
+	for (i = 0; i < strlen(block); i++) {
+		block_reverse[i] = block[strlen(block) - i];
+	}
+	block_reverse[i] = block[i];
+
+	sscanf(block_reverse, "%dn", &len);
+	sprintf(slen, "%d", len);
+	/* find the position of n in <ctrlr-name>n<ns-id> */
+	i = strlen(block) - strlen(slen) - 1;
+	block[i] = 0;
+
+	return block;
+}
+
+static void *get_registers(int nvme_fd)
 {
 	int fd;
-	char *base, path[512];
+	char *base = NULL, path[512];
 	void *membase;
 
-	base = nvme_char_from_block((char *)devicename);
-	sprintf(path, "/sys/class/nvme/%s/device/resource0", base);
-	fd = open(path, O_RDONLY);
-	if (fd < 0) {
-		sprintf(path, "/sys/class/misc/%s/device/resource0", base);
+	if (user_is_nvme(nvme_fd)) {
+		if (user_is_blk(nvme_fd)) {
+			base = user_nvme_char_from_block((char *)devicename);
+		} else {
+			base = (char *)devicename;
+		}
+
+		/*
+		 * Create PCI accesses symbol link
+		 * ex: in user <user_ioctl_dir>/pci/Nvme0      ---> /sys/bus/pci/devices/0000:05:00.0
+		 *     in kern /sys/class/nvme/nvme0/device ---> /sys/bus/pci/devices/0000:05:00.0
+		 */
+		sprintf(path, "%s/pci/%s/resource0", user_ioctl_dir, base);
 		fd = open(path, O_RDONLY);
-	}
-	if (fd < 0) {
-		fprintf(stderr, "%s did not find a pci resource\n", base);
-		return NULL;
+		if (fd < 0) {
+			fprintf(stderr, "%s did not find a pci resource\n", base);
+			return NULL;
+		}
+	} else {
+		base = nvme_char_from_block((char *)devicename);
+
+		sprintf(path, "/sys/class/nvme/%s/device/resource0", base);
+		fd = open(path, O_RDONLY);
+		if (fd < 0) {
+			sprintf(path, "/sys/class/misc/%s/device/resource0", base);
+			fd = open(path, O_RDONLY);
+		}
+		if (fd < 0) {
+			fprintf(stderr, "%s did not find a pci resource\n", base);
+			return NULL;
+		}
 	}
 
 	membase = mmap(NULL, getpagesize(), PROT_READ, MAP_SHARED, fd, 0);
@@ -2341,7 +2384,7 @@ static int show_registers(int argc, char **argv, struct command *cmd, struct plu
 
 	err = nvme_get_properties(fd, &bar);
 	if (err) {
-		bar = get_registers();
+		bar = get_registers(fd);
 		fabrics = false;
 	}
 	if (!bar) {
