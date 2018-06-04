@@ -1435,12 +1435,28 @@ static int scan_dev_filter(const struct dirent *d)
 	return 0;
 }
 
+/* Assume every block device starting with $userdev_dir is an nvme namespace */
+static int scan_userdev_filter(const struct dirent *d)
+{
+	char path[PATH_MAX];
+
+	if (d->d_name[0] == '.')
+		return 0;
+
+	snprintf(path, sizeof(path), "%s/%s/%s", user_ioctl_dir, "dev", d->d_name);
+	if (user_is_blk_path(path))
+		return 1;
+
+	return 0;
+}
+
 static int list(int argc, char **argv, struct command *cmd, struct plugin *plugin)
 {
-	char path[264];
-	struct dirent **devices;
+	char path[PATH_MAX];
+	struct dirent **devices, **user_devices = NULL;
 	struct list_item *list_items;
 	unsigned int i, n;
+	int user_n = 0;
 	int fmt, ret, fd;
 	const char *desc = "Retrieve basic information for the given device";
 	struct config {
@@ -1471,7 +1487,16 @@ static int list(int argc, char **argv, struct command *cmd, struct plugin *plugi
 		return n;
 	}
 
-	list_items = calloc(n, sizeof(*list_items));
+	if (user_ioctl_dir) {
+		snprintf(path, sizeof(path), "%s/%s", user_ioctl_dir, "dev");
+		user_n = scandir(path, &user_devices, scan_userdev_filter, alphasort);
+		if (user_n < 0) {
+			user_n = 0;
+			user_devices = NULL;
+		}
+	}
+
+	list_items = calloc(n + user_n, sizeof(*list_items));
 	if (!list_items) {
 		fprintf(stderr, "can not allocate controller list payload\n");
 		return ENOMEM;
@@ -1491,14 +1516,33 @@ static int list(int argc, char **argv, struct command *cmd, struct plugin *plugi
 			return ret;
 	}
 
+	for (i = 0; i < user_n; i++) {
+		snprintf(path, sizeof(path), "%s/%s/%s", user_ioctl_dir, "dev", user_devices[i]->d_name);
+		fd = uni_open(path, O_RDONLY);
+		if (fd < 0) {
+			fprintf(stderr, "can not open %s: %s\n", path,
+					strerror(errno));
+			return errno;
+		}
+		ret = get_nvme_info(fd, &list_items[n + i], path);
+		close(fd);
+		if (ret)
+			return ret;
+	}
+
 	if (fmt == JSON)
-		json_print_list_items(list_items, n);
+		json_print_list_items(list_items, n + user_n);
 	else
-		show_list_items(list_items, n);
+		show_list_items(list_items, n + user_n);
 
 	for (i = 0; i < n; i++)
 		free(devices[i]);
 	free(devices);
+
+	for (i = 0; i < user_n; i++)
+		free(user_devices[i]);
+	free(user_devices);
+
 	free(list_items);
 
 	return 0;
