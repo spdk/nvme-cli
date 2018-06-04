@@ -53,6 +53,7 @@
 #include "argconfig.h"
 
 #include "fabrics.h"
+#include "uni_ioctl.h"
 
 #define array_len(x) ((size_t)(sizeof(x) / sizeof(x[0])))
 #define min(x, y) ((x) > (y) ? (y) : (x))
@@ -97,7 +98,7 @@ static int open_dev(const char *dev)
 	int err, fd;
 
 	devicename = basename(dev);
-	err = open(dev, O_RDONLY);
+	err = uni_open(dev, O_RDONLY);
 	if (err < 0)
 		goto perror;
 	fd = err;
@@ -105,7 +106,7 @@ static int open_dev(const char *dev)
 	err = fstat(fd, &nvme_stat);
 	if (err < 0)
 		goto perror;
-	if (!S_ISCHR(nvme_stat.st_mode) && !S_ISBLK(nvme_stat.st_mode)) {
+	if (!uni_is_nvme(fd, &nvme_stat)) {
 		fprintf(stderr, "%s is not a block or character device\n", dev);
 		return -ENODEV;
 	}
@@ -1724,7 +1725,7 @@ static int id_ns(int argc, char **argv, struct command *cmd, struct plugin *plug
 		flags |= VS;
 	if (cfg.human_readable)
 		flags |= HUMAN;
-	if (!cfg.namespace_id && S_ISBLK(nvme_stat.st_mode)) {
+	if (!cfg.namespace_id && uni_is_blk(fd, &nvme_stat)) {
 		cfg.namespace_id = get_nsid(fd);
 		if (cfg.namespace_id <= 0)
 			return EINVAL;
@@ -2424,7 +2425,7 @@ static int format(int argc, char **argv, struct command *cmd, struct plugin *plu
 	if (fd < 0)
 		return fd;
 
-	if (S_ISBLK(nvme_stat.st_mode)) {
+	if (uni_is_blk(fd, &nvme_stat)) {
 		cfg.namespace_id = get_nsid(fd);
 		if (cfg.namespace_id <= 0)
 			return EINVAL;
@@ -2481,8 +2482,8 @@ static int format(int argc, char **argv, struct command *cmd, struct plugin *plu
 					nvme_status_to_string(err), err);
 	else {
 		printf("Success formatting namespace:%x\n", cfg.namespace_id);
-		ioctl(fd, BLKRRPART);
-		if (cfg.reset && S_ISCHR(nvme_stat.st_mode))
+		 uni_ioctl(fd, BLKRRPART);
+		if (cfg.reset && uni_is_char(fd, &nvme_stat))
 			nvme_reset_controller(fd);
 	}
 
@@ -3121,7 +3122,7 @@ static int flush(int argc, char **argv, struct command *cmd, struct plugin *plug
 	if (fd < 0)
 		return fd;
 
-	if (S_ISBLK(nvme_stat.st_mode))
+	if (uni_is_blk(fd, &nvme_stat))
 		cfg.namespace_id = get_nsid(fd);
 	err = nvme_flush(fd, cfg.namespace_id);
 	if (err < 0)
@@ -3577,7 +3578,7 @@ static int submit_io(int opcode, char *command, const char *desc,
 		goto close_mfd;
 	}
 
-	if (ioctl(fd, BLKPBSZGET, &phys_sector_size) < 0)
+	if (uni_ioctl(fd, BLKPBSZGET, &phys_sector_size) < 0)
 		goto close_mfd;
 
 	buffer_size = (cfg.block_count + 1) * phys_sector_size;
