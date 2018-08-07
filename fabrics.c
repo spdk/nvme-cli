@@ -708,6 +708,7 @@ static int do_discover(char *argstr, bool connect)
 			save_discovery_log(log, numrec);
 		else
 			print_discovery_log(log, numrec);
+		free(log);
 		break;
 	case DISC_GET_NUMRECS:
 		fprintf(stderr,
