@@ -508,7 +508,7 @@ static int wdc_get_serial_name(int fd, char *file, size_t len, char *suffix)
 {
 	int i;
 	int ret;
-	char orig[PATH_MAX] = {0};
+	char orig[PATH_MAX + 1] = {0};
 	struct nvme_id_ctrl ctrl;
 
 	i = sizeof (ctrl.sn) - 1;
@@ -526,8 +526,13 @@ static int wdc_get_serial_name(int fd, char *file, size_t len, char *suffix)
 		ctrl.sn[i] = '\0';
 		i--;
 	}
-	snprintf(file, len, "%s%s%s.bin", orig, ctrl.sn, suffix);
-	return 0;
+	if(strlen(orig) + strlen(ctrl.sn) + strlen(suffix) < len) {
+		snprintf(file, len, "%s%s%s.bin", orig, ctrl.sn, suffix);
+		return 0;
+	} else {
+		fprintf(stderr, "ERROR : WDC : serial name too long.\n");
+		return -1;
+	}
 }
 
 static int wdc_create_log_file(char *file, __u8 *drive_log_data,
@@ -747,7 +752,7 @@ static int wdc_cap_diag(int argc, char **argv, struct command *command,
 {
 	const char *desc = "Capture Diagnostics Log.";
 	const char *file = "Output file pathname.";
-	char f[PATH_MAX] = {0};
+	char f[PATH_MAX + 1] = {0};
 	int fd;
 
 	struct config {
@@ -810,7 +815,7 @@ static int wdc_do_crash_dump(int fd, char *file)
 
 static int wdc_crash_dump(int fd, char *file)
 {
-	char f[PATH_MAX] = {0};
+	char f[PATH_MAX + 1] = {0};
 
 	if (file != NULL) {
 		strncpy(f, file, PATH_MAX);
@@ -868,7 +873,7 @@ static int wdc_drive_log(int argc, char **argv, struct command *command,
 {
 	const char *desc = "Capture Drive Log.";
 	const char *file = "Output file pathname.";
-	char f[PATH_MAX] = {0};
+	char f[PATH_MAX + 1] = {0};
 	int fd;
 	struct config {
 		char *file;
@@ -2222,8 +2227,8 @@ static int wdc_drive_essentials(int argc, char **argv, struct command *command,
 	char *desc = "Capture Drive Essentials.";
 	char *dirName = "Output directory pathname.";
 
-	char d[PATH_MAX] = {0};
-	char k[PATH_MAX] = {0};
+	char d[PATH_MAX + 1] = {0};
+	char k[PATH_MAX + 1] = {0};
 	char *d_ptr;
 	int fd;
 	struct config {
