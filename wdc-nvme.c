@@ -508,7 +508,7 @@ static int wdc_get_serial_name(int fd, char *file, size_t len, char *suffix)
 {
 	int i;
 	int ret;
-	char orig[PATH_MAX] = {0};
+	char orig[PATH_MAX + 1] = {0};
 	struct nvme_id_ctrl ctrl;
 
 	i = sizeof (ctrl.sn) - 1;
@@ -747,7 +747,7 @@ static int wdc_cap_diag(int argc, char **argv, struct command *command,
 {
 	const char *desc = "Capture Diagnostics Log.";
 	const char *file = "Output file pathname.";
-	char f[PATH_MAX] = {0};
+	char f[PATH_MAX + 1] = {0};
 	int fd;
 
 	struct config {
@@ -810,7 +810,7 @@ static int wdc_do_crash_dump(int fd, char *file)
 
 static int wdc_crash_dump(int fd, char *file)
 {
-	char f[PATH_MAX] = {0};
+	char f[PATH_MAX + 1] = {0};
 
 	if (file != NULL) {
 		strncpy(f, file, PATH_MAX);
@@ -868,7 +868,7 @@ static int wdc_drive_log(int argc, char **argv, struct command *command,
 {
 	const char *desc = "Capture Drive Log.";
 	const char *file = "Output file pathname.";
-	char f[PATH_MAX] = {0};
+	char f[PATH_MAX + 1] = {0};
 	int fd;
 	struct config {
 		char *file;
