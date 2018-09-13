@@ -99,9 +99,9 @@ enum {
 };
 
 struct nvm_ioctl_create {
-	char dev[DISK_NAME_LEN];		/* open-channel SSD device */
-	char tgttype[NVM_TTYPE_NAME_MAX];	/* target type name */
-	char tgtname[DISK_NAME_LEN];		/* dev to expose target as */
+	char dev[DISK_NAME_LEN + 1];		/* open-channel SSD device */
+	char tgttype[NVM_TTYPE_NAME_MAX + 1];	/* target type name */
+	char tgtname[DISK_NAME_LEN + 1];		/* dev to expose target as */
 
 	__u32 flags;
 
@@ -115,8 +115,8 @@ struct nvm_ioctl_remove {
 };
 
 struct nvm_ioctl_dev_init {
-	char dev[DISK_NAME_LEN];		/* open-channel SSD device */
-	char mmtype[NVM_MMTYPE_LEN];		/* register to media manager */
+	char dev[DISK_NAME_LEN + 1];		/* open-channel SSD device */
+	char mmtype[NVM_MMTYPE_LEN + 1];		/* register to media manager */
 
 	__u32 flags;
 };
