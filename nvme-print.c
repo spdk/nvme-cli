@@ -1698,7 +1698,7 @@ void json_smart_log(struct nvme_smart_log *smart, unsigned int nsid, const char 
 {
 	struct json_object *root;
 	int c;
-	char key[21];
+	char key[31];
 
 	unsigned int temperature = ((smart->temperature[1] << 8) |
 		smart->temperature[0]);
