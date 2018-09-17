@@ -33,10 +33,11 @@
 
 SPDK_ROOT_DIR ?= $(abspath $(CURDIR)/spdk)
 SPDK_LIB_DIR ?= $(SPDK_ROOT_DIR)/build/lib
-DPDK_LIB_DIR ?= $(SPDK_ROOT_DIR)/dpdk/build/lib
 
 -include $(SPDK_ROOT_DIR)/CONFIG.local
 include $(SPDK_ROOT_DIR)/CONFIG
+
+DPDK_LIB_DIR ?= $(CONFIG_DPDK_DIR)/lib
 
 override CFLAGS += -I$(SPDK_ROOT_DIR)/include
 override LDFLAGS += \
