@@ -22,6 +22,30 @@
       "revId": "6f4139a428aacc56eacee59cbf9421ae1f66b43d",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2f72e8fb_692d6ee9",
+        "filename": "env.spdk.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1011218
+      },
+      "writtenOn": "2018-09-18T03:41:16Z",
+      "side": 1,
+      "message": "Yes, as long as we\u0027re using DPDK. CONFIG_DPDK_DIR is always set, unless the user specified custom CONFIG_ENV. But since we link with hardcoded rte_ libs, we don\u0027t support non-dpdk environments anyway. Supporting those could be done as a future improvement, but there\u0027s no rush right now.\n\n(from configure#259)\n\u003e if [ -z \"$CONFIG_ENV\" ]; then\n\u003e\tif [ -z \"$CONFIG_DPDK_DIR\" ]; then\n\u003e\t\trootdir\u003d$(readlink -f $(dirname $0))\n\u003e (snip)\n\u003e\t\tCONFIG_DPDK_DIR\u003d\"$rootdir\"/dpdk/build",
+      "parentUuid": "a7c2d68d_9f140d77",
+      "range": {
+        "startLine": 40,
+        "startChar": 18,
+        "endLine": 40,
+        "endChar": 33
+      },
+      "revId": "6f4139a428aacc56eacee59cbf9421ae1f66b43d",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
