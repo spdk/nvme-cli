@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a7c2d68d_9f140d77",
+        "filename": "env.spdk.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1011207
+      },
+      "writtenOn": "2018-09-18T02:53:30Z",
+      "side": 1,
+      "message": "This will be always a vaild value. Is this right? Just to make sure we will always point to the correct place of DPDK libs. Thanks, Gang",
+      "range": {
+        "startLine": 40,
+        "startChar": 18,
+        "endLine": 40,
+        "endChar": 33
+      },
+      "revId": "6f4139a428aacc56eacee59cbf9421ae1f66b43d",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
