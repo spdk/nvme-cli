@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da95b76e_6683c5f1",
+        "filename": "nvme-print.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1701,
+      "author": {
+        "id": 1011222
+      },
+      "writtenOn": "2018-09-25T00:59:37Z",
+      "side": 1,
+      "message": "why 31 instead of 22?",
+      "revId": "106ff3802ef0dafb2a58cffa4a9c380f94ae822a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
