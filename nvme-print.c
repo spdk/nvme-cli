@@ -2370,8 +2370,8 @@ void json_endurance_log(struct nvme_endurance_group_log *endurance_group,
 void json_smart_log(struct nvme_smart_log *smart, unsigned int nsid, const char *devname)
 {
 	struct json_object *root;
-	int c;
-	char key[21];
+	uint8_t c;
+	char key[24];
 
 	unsigned int temperature = ((smart->temperature[1] << 8) |
 		smart->temperature[0]);
