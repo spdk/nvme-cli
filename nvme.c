@@ -1842,7 +1842,7 @@ static int id_ns(int argc, char **argv, struct command *cmd, struct plugin *plug
 		flags |= VS;
 	if (cfg.human_readable)
 		flags |= HUMAN;
-	if (!cfg.namespace_id && S_ISBLK(nvme_stat.st_mode)) {
+	if (!cfg.namespace_id && (S_ISBLK(nvme_stat.st_mode) || nvme_spdk_is_valid_fd(fd) == 0)) {
 		cfg.namespace_id = get_nsid(fd);
 		if (cfg.namespace_id == 0) {
 			err = EINVAL;
