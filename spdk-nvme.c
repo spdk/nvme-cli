@@ -111,12 +111,29 @@ probe_cb(void *cb_ctx, const struct spdk_nvme_transport_id *trid,
 }
 
 static void
+spdk_construct_ctrlr(const struct spdk_nvme_transport_id *trid, struct spdk_nvme_qpair *io_qpair,
+		     struct spdk_nvme_ctrlr *ctrlr, int ns_id)
+{
+	g_spdk_dev[g_num_ctrlr].ctrlr = ctrlr;
+	g_spdk_dev[g_num_ctrlr].fd = socket(AF_UNIX, SOCK_RAW, 0);
+	g_spdk_dev[g_num_ctrlr].io_qpair = io_qpair;
+	g_spdk_dev[g_num_ctrlr].ns_id = ns_id;
+	snprintf(g_spdk_dev[g_num_ctrlr].traddr, sizeof(trid->traddr), "%s", trid->traddr);
+	if (trid->trtype == SPDK_NVME_TRANSPORT_RDMA) {
+		snprintf(g_spdk_dev[g_num_ctrlr].subnqn, sizeof(trid->subnqn), "%s", trid->subnqn);
+	}
+
+	g_num_ctrlr++;
+}
+
+static void
 attach_cb(void *cb_ctx, const struct spdk_nvme_transport_id *trid,
 	  struct spdk_nvme_ctrlr *ctrlr, const struct spdk_nvme_ctrlr_opts *opts)
 {
 	unsigned int num_ns = spdk_nvme_ctrlr_get_num_ns(ctrlr);
 	struct spdk_nvme_ns *ns = NULL;
 	struct spdk_nvme_qpair *io_qpair = NULL;
+	bool active_ns_found = false;
 
 	if (strcmp(trid->subnqn, NVME_DISC_SUBSYS_NAME) == 0) {
 		g_discovery_ctrlr = ctrlr;
@@ -127,23 +144,21 @@ attach_cb(void *cb_ctx, const struct spdk_nvme_transport_id *trid,
 
 	for (int i = 1; i <= num_ns; i ++) {
 		ns = spdk_nvme_ctrlr_get_ns(ctrlr, i);
-		if (ns != NULL && spdk_nvme_ns_is_active(ns) == true) {
+		if (ns != NULL && spdk_nvme_ctrlr_is_active_ns(ctrlr, i) == true) {
 			if (g_num_ctrlr == NUM_MAX_NVMES) {
 				fprintf(stderr, "no resource to manage ctrlr %s\n", trid->traddr);
 				return;
 			}
 
-			g_spdk_dev[g_num_ctrlr].ctrlr = ctrlr;
-			g_spdk_dev[g_num_ctrlr].fd = socket(AF_UNIX, SOCK_RAW, 0);
-			g_spdk_dev[g_num_ctrlr].io_qpair = io_qpair;
-			g_spdk_dev[g_num_ctrlr].ns_id = i;
-			snprintf(g_spdk_dev[g_num_ctrlr].traddr, sizeof(trid->traddr), "%s", trid->traddr);
-			if (trid->trtype == SPDK_NVME_TRANSPORT_RDMA) {
-				snprintf(g_spdk_dev[g_num_ctrlr].subnqn, sizeof(trid->subnqn), "%s", trid->subnqn);
-			}
+			spdk_construct_ctrlr(trid, io_qpair, ctrlr, i);
 
-			g_num_ctrlr++;
+			active_ns_found = true;
 		}
+	}
+
+	/* Always need to initialize the ctrlr if no active ns found*/
+	if (active_ns_found == false) {
+		spdk_construct_ctrlr(trid, io_qpair, ctrlr, 1);
 	}
 }
 
