@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3b01e5b7_3ebb64d3",
+        "filename": "spdk-nvme.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1011204
+      },
+      "writtenOn": "2018-09-28T09:13:09Z",
+      "side": 1,
+      "message": "Actually I think this can be optimized to store controller data structure only, for NSID part, you can check the Namespace is active or not when sending commands related with Namespace.",
+      "revId": "1d919d88c7c102abb7d63e54aa3ccb21f94b0b21",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
