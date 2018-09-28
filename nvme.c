@@ -805,6 +805,9 @@ static void print_list_item(struct list_item list_item)
 	char usage[128];
 	char format[128];
 
+	if (list_item.nsid == 0)
+		lba = 0;
+
 	sprintf(usage,"%6.2f %2sB / %6.2f %2sB", nuse, u_suffix,
 		nsze, s_suffix);
 	sprintf(format,"%3.0f %2sB + %2d B", (double)lba, l_suffix,
@@ -837,10 +840,12 @@ static int get_nvme_info(int fd, struct list_item *item, const char *node)
 	if (err)
 		return err;
 	item->nsid = nvme_get_nsid(fd);
-	err = nvme_identify_ns(fd, item->nsid,
-			       0, &item->ns);
-	if (err)
-		return err;
+	if (item->nsid > 0) {
+		err = nvme_identify_ns(fd, item->nsid,
+				       0, &item->ns);
+		if (err)
+			return err;
+	}
 	strcpy(item->node, node);
 	item->block = S_ISBLK(nvme_stat.st_mode);
 
