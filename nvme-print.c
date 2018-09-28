@@ -1894,7 +1894,7 @@ static void show_list_item(struct list_item list_item)
 
 	sprintf(usage,"%6.2f %2sB / %6.2f %2sB", nuse, u_suffix,
 		nsze, s_suffix);
-	sprintf(format,"%3.0f %2sB + %2d B", (double)lba, l_suffix,
+	sprintf(format,"%3.0f %2sB + %2d B", list_item.nsid == 0 ? 0 : (double)lba, l_suffix,
 		list_item.ns.lbaf[(list_item.ns.flbas & 0x0f)].ms);
 	printf("%-16s %-*.*s %-*.*s %-9d %-26s %-16s %-.*s\n", list_item.node,
             (int)sizeof(list_item.ctrl.sn), (int)sizeof(list_item.ctrl.sn), list_item.ctrl.sn,
@@ -1988,7 +1988,7 @@ void json_print_list_items(struct list_item *list_items, unsigned len)
 					  nsze);
 		json_object_add_value_uint(device_attrs,
 					  "SectorSize",
-					  lba);
+					  list_items[i].nsid == 0 ? 0 : lba);
 
 		free((void*)product);
 	}

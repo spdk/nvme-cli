@@ -1509,6 +1509,7 @@ static int get_nvme_info(int fd, struct list_item *item, const char *node)
 	err = nvme_identify_ctrl(fd, &item->ctrl);
 	if (err)
 		return err;
+	strcpy(item->node, node);
 	item->nsid = nvme_get_nsid(fd);
 	if (item->nsid <= 0)
 		return item->nsid;
@@ -1516,7 +1517,6 @@ static int get_nvme_info(int fd, struct list_item *item, const char *node)
 			       0, &item->ns);
 	if (err)
 		return err;
-	strcpy(item->node, node);
 	item->block = S_ISBLK(nvme_stat.st_mode);
 
 	return 0;
