@@ -16,6 +16,23 @@
       "revId": "1d919d88c7c102abb7d63e54aa3ccb21f94b0b21",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0c0efbfd_c84d3137",
+        "filename": "spdk-nvme.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1011712
+      },
+      "writtenOn": "2018-09-28T09:42:28Z",
+      "side": 1,
+      "message": "Will it show any difference between the drive who has no namespace and the drive who has a first namespace?\nMaybe ctrlrs can be assign a 0 ns-id. Then filter them out when you need to just operate on namespace devices.",
+      "revId": "1d919d88c7c102abb7d63e54aa3ccb21f94b0b21",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
     }
   ]
 }
