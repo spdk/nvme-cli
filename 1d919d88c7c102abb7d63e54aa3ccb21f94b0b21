@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "21680f9e_ba18424d",
+        "filename": "spdk-nvme.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1011207
+      },
+      "writtenOn": "2018-09-28T12:40:21Z",
+      "side": 1,
+      "message": "some commands are NS related. Here when constructing the related targets, the ctrlr and ns information has been put together to support both the NS and ctrlr related commands.",
+      "parentUuid": "3b01e5b7_3ebb64d3",
+      "revId": "1d919d88c7c102abb7d63e54aa3ccb21f94b0b21",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0c0efbfd_c84d3137",
         "filename": "spdk-nvme.c",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2018-09-28T09:42:28Z",
       "side": 1,
       "message": "Will it show any difference between the drive who has no namespace and the drive who has a first namespace?\nMaybe ctrlrs can be assign a 0 ns-id. Then filter them out when you need to just operate on namespace devices.",
+      "revId": "1d919d88c7c102abb7d63e54aa3ccb21f94b0b21",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f28e9fe5_94de9a40",
+        "filename": "spdk-nvme.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1011207
+      },
+      "writtenOn": "2018-09-28T12:40:21Z",
+      "side": 1,
+      "message": "Good suggestion. My initial consideration is that SPDK is a little different that we always need to display the domain:bus:device:function information at the \"list\" operation so that user knows all the ctrlrs that he can control. I will improve the output as suggested as show the ID as 0 here.",
+      "parentUuid": "0c0efbfd_c84d3137",
       "revId": "1d919d88c7c102abb7d63e54aa3ccb21f94b0b21",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
