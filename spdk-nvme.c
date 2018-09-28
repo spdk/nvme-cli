@@ -58,7 +58,7 @@
 struct spdk_nvme_dev g_spdk_dev[NUM_MAX_NVMES] = {};
 
 bool g_spdk_enabled = false;
-unsigned int g_num_ctrlr = 0;
+unsigned int g_num_dev = 0;
 bool g_list_all = false;
 static int outstanding_commands;
 struct spdk_nvme_transport_id g_trid;
@@ -95,10 +95,10 @@ probe_cb(void *cb_ctx, const struct spdk_nvme_transport_id *trid,
 		return true;
 	}
 
-	if (strcmp(g_spdk_dev[g_num_ctrlr].traddr, trid->traddr) == 0) {
+	if (strcmp(g_spdk_dev[g_num_dev].traddr, trid->traddr) == 0) {
 		if (trid->trtype == SPDK_NVME_TRANSPORT_RDMA) {
-			if ((strcmp(g_spdk_dev[g_num_ctrlr].trsvcid, trid->trsvcid) == 0) &&
-			    (strcmp(g_spdk_dev[g_num_ctrlr].subnqn, trid->subnqn) == 0)) {
+			if ((strcmp(g_spdk_dev[g_num_dev].trsvcid, trid->trsvcid) == 0) &&
+			    (strcmp(g_spdk_dev[g_num_dev].subnqn, trid->subnqn) == 0)) {
 				nvme_spdk_nvmf_setup_opts(opts, g_nvmf_conf);
 				return true;
 			}
@@ -111,12 +111,29 @@ probe_cb(void *cb_ctx, const struct spdk_nvme_transport_id *trid,
 }
 
 static void
+spdk_construct_dev(const struct spdk_nvme_transport_id *trid, struct spdk_nvme_qpair *io_qpair,
+		   struct spdk_nvme_ctrlr *ctrlr, int ns_id)
+{
+	g_spdk_dev[g_num_dev].ctrlr = ctrlr;
+	g_spdk_dev[g_num_dev].fd = socket(AF_UNIX, SOCK_RAW, 0);
+	g_spdk_dev[g_num_dev].io_qpair = io_qpair;
+	g_spdk_dev[g_num_dev].ns_id = ns_id;
+	snprintf(g_spdk_dev[g_num_dev].traddr, sizeof(trid->traddr), "%s", trid->traddr);
+	if (trid->trtype == SPDK_NVME_TRANSPORT_RDMA) {
+		snprintf(g_spdk_dev[g_num_dev].subnqn, sizeof(trid->subnqn), "%s", trid->subnqn);
+	}
+
+	g_num_dev++;
+}
+
+static void
 attach_cb(void *cb_ctx, const struct spdk_nvme_transport_id *trid,
 	  struct spdk_nvme_ctrlr *ctrlr, const struct spdk_nvme_ctrlr_opts *opts)
 {
 	unsigned int num_ns = spdk_nvme_ctrlr_get_num_ns(ctrlr);
 	struct spdk_nvme_ns *ns = NULL;
 	struct spdk_nvme_qpair *io_qpair = NULL;
+	bool active_ns_found = false;
 
 	if (strcmp(trid->subnqn, NVME_DISC_SUBSYS_NAME) == 0) {
 		g_discovery_ctrlr = ctrlr;
@@ -127,23 +144,21 @@ attach_cb(void *cb_ctx, const struct spdk_nvme_transport_id *trid,
 
 	for (int i = 1; i <= num_ns; i ++) {
 		ns = spdk_nvme_ctrlr_get_ns(ctrlr, i);
-		if (ns != NULL && spdk_nvme_ns_is_active(ns) == true) {
-			if (g_num_ctrlr == NUM_MAX_NVMES) {
+		if (ns != NULL && spdk_nvme_ctrlr_is_active_ns(ctrlr, i) == true) {
+			if (g_num_dev == NUM_MAX_NVMES) {
 				fprintf(stderr, "no resource to manage ctrlr %s\n", trid->traddr);
 				return;
 			}
 
-			g_spdk_dev[g_num_ctrlr].ctrlr = ctrlr;
-			g_spdk_dev[g_num_ctrlr].fd = socket(AF_UNIX, SOCK_RAW, 0);
-			g_spdk_dev[g_num_ctrlr].io_qpair = io_qpair;
-			g_spdk_dev[g_num_ctrlr].ns_id = i;
-			snprintf(g_spdk_dev[g_num_ctrlr].traddr, sizeof(trid->traddr), "%s", trid->traddr);
-			if (trid->trtype == SPDK_NVME_TRANSPORT_RDMA) {
-				snprintf(g_spdk_dev[g_num_ctrlr].subnqn, sizeof(trid->subnqn), "%s", trid->subnqn);
-			}
+			spdk_construct_dev(trid, io_qpair, ctrlr, i);
 
-			g_num_ctrlr++;
+			active_ns_found = true;
 		}
+	}
+
+	/* Always need to initialize the ctrlr if no active ns found*/
+	if (active_ns_found == false) {
+		spdk_construct_dev(trid, io_qpair, ctrlr, 0);
 	}
 }
 
@@ -254,7 +269,7 @@ spdk_parse_args(int argc, char **argv, bool *probe)
 
 	for (int i = 1; i < argc; i++) {
 		if (nvme_spdk_is_bdf_dev(argv[i])) {
-			snprintf(g_spdk_dev[g_num_ctrlr].traddr, SPDK_TRADDR_MAX_LEN, "%s", argv[i]);
+			snprintf(g_spdk_dev[g_num_dev].traddr, SPDK_TRADDR_MAX_LEN, "%s", argv[i]);
 			return 0;
 		}
 	}
@@ -361,9 +376,9 @@ nvme_spdk_nvmf_connect(void *conf)
 	snprintf(g_trid.traddr, sizeof(g_trid.traddr), "%s", g_nvmf_conf->traddr);
 	snprintf(g_trid.trsvcid, sizeof(g_trid.trsvcid), "%s", g_nvmf_conf->trsvcid);
 	snprintf(g_trid.subnqn, sizeof(g_trid.subnqn), "%s", g_nvmf_conf->nqn);
-	snprintf(g_spdk_dev[g_num_ctrlr].traddr, sizeof(g_trid.traddr), "%s", g_trid.traddr);
-	snprintf(g_spdk_dev[g_num_ctrlr].trsvcid, sizeof(g_trid.trsvcid), "%s", g_trid.trsvcid);
-	snprintf(g_spdk_dev[g_num_ctrlr].subnqn, sizeof(g_trid.subnqn), "%s", g_trid.subnqn);
+	snprintf(g_spdk_dev[g_num_dev].traddr, sizeof(g_trid.traddr), "%s", g_trid.traddr);
+	snprintf(g_spdk_dev[g_num_dev].trsvcid, sizeof(g_trid.trsvcid), "%s", g_trid.trsvcid);
+	snprintf(g_spdk_dev[g_num_dev].subnqn, sizeof(g_trid.subnqn), "%s", g_trid.subnqn);
 
 	ctrlr = spdk_nvme_connect(&g_trid, NULL, 0);
 	if (ctrlr == NULL) {
@@ -408,7 +423,7 @@ nvme_spdk_get_ctrlr_by_fd(unsigned int fd)
 		return g_discovery_ctrlr;
 	}
 
-	for (int i = 0; i < g_num_ctrlr; i++) {
+	for (int i = 0; i < g_num_dev; i++) {
 		if (g_spdk_dev[i].fd == fd) {
 			return g_spdk_dev[i].ctrlr;
 		}
@@ -420,7 +435,7 @@ nvme_spdk_get_ctrlr_by_fd(unsigned int fd)
 static struct spdk_nvme_qpair *
 nvme_spdk_get_io_qpair_by_fd(unsigned int fd)
 {
-	for (int i = 0; i < g_num_ctrlr; i++) {
+	for (int i = 0; i < g_num_dev; i++) {
 		if (g_spdk_dev[i].fd == fd) {
 			return g_spdk_dev[i].io_qpair;
 		}
@@ -506,7 +521,7 @@ nvme_spdk_submit_cmd_passthru(unsigned int fd, struct nvme_passthru_cmd *cmd, bo
 unsigned int
 nvme_spdk_get_fd_by_dev(const char *dev)
 {
-	for (int i = 0; i < g_num_ctrlr; i++) {
+	for (int i = 0; i < g_num_dev; i++) {
 		if (strcmp(g_spdk_dev[i].traddr, dev) == 0) {
 			return g_spdk_dev[i].fd;
 		}
@@ -520,7 +535,7 @@ nvme_spdk_cleanup(void)
 {
 	struct spdk_nvme_ctrlr *ctrlr = NULL;
 
-	for (int i = 0; i < g_num_ctrlr; i++) {
+	for (int i = 0; i < g_num_dev; i++) {
 		if (g_spdk_dev[i].ctrlr && ctrlr != g_spdk_dev[i].ctrlr) {
 			spdk_nvme_ctrlr_free_io_qpair(g_spdk_dev[i].io_qpair);
 
@@ -539,7 +554,7 @@ nvme_spdk_cleanup(void)
 int
 nvme_spdk_get_nsid(unsigned int fd)
 {
-	for (int i = 0; i < g_num_ctrlr; i++) {
+	for (int i = 0; i < g_num_dev; i++) {
 		if (g_spdk_dev[i].fd == fd) {
 			return g_spdk_dev[i].ns_id;
 		}
@@ -551,7 +566,7 @@ nvme_spdk_get_nsid(unsigned int fd)
 int
 nvme_spdk_is_valid_fd(unsigned int fd)
 {
-	for (int i = 0; i < g_num_ctrlr; i++) {
+	for (int i = 0; i < g_num_dev; i++) {
 		if (g_spdk_dev[i].fd == fd) {
 			return 0;
 		}
