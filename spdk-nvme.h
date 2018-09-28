@@ -57,7 +57,7 @@ struct spdk_nvme_dev {
 
 extern bool g_spdk_enabled;
 
-extern unsigned int g_num_ctrlr;
+extern unsigned int g_num_dev;
 
 extern struct spdk_nvme_dev g_spdk_dev[NUM_MAX_NVMES];
 
