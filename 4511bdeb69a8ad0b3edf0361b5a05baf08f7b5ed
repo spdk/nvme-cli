@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "73790339_1b3c8272",
+        "filename": "spdk.conf",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1011207
+      },
+      "writtenOn": "2018-10-30T09:32:34Z",
+      "side": 1,
+      "message": "this will ask for 16 cores, looks like incorrect here.\n\nMaybe just 0x10 (second core) or 0x1 (first core)",
+      "range": {
+        "startLine": 2,
+        "startChar": 10,
+        "endLine": 2,
+        "endChar": 16
+      },
+      "revId": "4511bdeb69a8ad0b3edf0361b5a05baf08f7b5ed",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
