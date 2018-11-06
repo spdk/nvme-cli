@@ -42,7 +42,7 @@ override CFLAGS += -I$(SPDK_ROOT_DIR)/include
 override LDFLAGS += \
 	-Wl,--whole-archive \
 	-L$(SPDK_LIB_DIR) -lspdk_log -lspdk_sock -lspdk_nvme -lspdk_env_dpdk -lspdk_util \
-	-L$(DPDK_LIB_DIR) -lrte_eal -lrte_mempool -lrte_ring -lrte_pci -lrte_bus_pci \
+	-L$(DPDK_LIB_DIR) -lrte_eal -lrte_mempool -lrte_ring -lrte_pci -lrte_bus_pci -lrte_power \
 	-Wl,--no-whole-archive \
 	-ldl -pthread -lrt -lrdmacm -lnuma -libverbs
 
