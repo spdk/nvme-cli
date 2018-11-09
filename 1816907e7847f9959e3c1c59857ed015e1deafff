@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c272e312_629de5f2",
+        "filename": "nvme.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1512,
+      "author": {
+        "id": 1011207
+      },
+      "writtenOn": "2018-11-09T07:59:10Z",
+      "side": 1,
+      "message": "This is needed to get the BDF for the case of nsid is zero",
+      "range": {
+        "startLine": 1512,
+        "startChar": 1,
+        "endLine": 1512,
+        "endChar": 26
+      },
+      "revId": "1816907e7847f9959e3c1c59857ed015e1deafff",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
