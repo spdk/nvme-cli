@@ -1,0 +1,9 @@
+Code-Review+2: Jim Harris <james.r.harris@intel.com>
+Code-Review+1: Ziye Yang <optimistyzy@gmail.com>
+Code-Review+2: Shuhei Matsumoto <shuhei.matsumoto.xt@hitachi.com>
+Verified+1: Jim Harris <james.r.harris@intel.com>
+Submitted-by: Jim Harris <james.r.harris@intel.com>
+Submitted-at: Mon, 19 Nov 2018 15:35:35 +0000
+Reviewed-on: https://review.gerrithub.io/426943
+Project: spdk/nvme-cli
+Branch: refs/heads/spdk-1.6
