@@ -2,6 +2,46 @@
   "comments": [
     {
       "key": {
+        "uuid": "92646ab3_60303e6a",
+        "filename": "nvme-print.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1897,
+      "author": {
+        "id": 1011712
+      },
+      "writtenOn": "2018-12-06T09:28:14Z",
+      "side": 1,
+      "message": "If nsid is 0, then seems lba is also 0, since list_items is from calloc.",
+      "range": {
+        "startLine": 1897,
+        "startChar": 72,
+        "endLine": 1897,
+        "endChar": 75
+      },
+      "revId": "1816907e7847f9959e3c1c59857ed015e1deafff",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a3c72b90_f087e3fb",
+        "filename": "nvme-print.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1991,
+      "author": {
+        "id": 1011712
+      },
+      "writtenOn": "2018-12-06T09:28:14Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "1816907e7847f9959e3c1c59857ed015e1deafff",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c272e312_629de5f2",
         "filename": "nvme.c",
         "patchSetId": 1
@@ -22,6 +62,29 @@
       "revId": "1816907e7847f9959e3c1c59857ed015e1deafff",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ef4bf928_221dfdd6",
+        "filename": "spdk-nvme.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1011712
+      },
+      "writtenOn": "2018-12-06T09:28:14Z",
+      "side": 1,
+      "message": "Not necessary, but better to change spdk_construct_ctrlr to be spdk_construct_dev, g_num_ctrlr to be g_num_dev, in order to avoid misunderstanding.",
+      "range": {
+        "startLine": 114,
+        "startChar": 15,
+        "endLine": 114,
+        "endChar": 20
+      },
+      "revId": "1816907e7847f9959e3c1c59857ed015e1deafff",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
     }
   ]
 }
