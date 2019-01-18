@@ -127,6 +127,47 @@
       "revId": "1816907e7847f9959e3c1c59857ed015e1deafff",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9acdc85f_ecb8437e",
+        "filename": "spdk-nvme.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1011222
+      },
+      "writtenOn": "2019-01-18T16:08:32Z",
+      "side": 1,
+      "message": "Agreed.  We do this once for each namespace, not for each controller.  Calling this ctrlr will be confusing.",
+      "parentUuid": "ef4bf928_221dfdd6",
+      "range": {
+        "startLine": 114,
+        "startChar": 15,
+        "endLine": 114,
+        "endChar": 20
+      },
+      "revId": "1816907e7847f9959e3c1c59857ed015e1deafff",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "685b57fc_72fc26ad",
+        "filename": "spdk-nvme.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1011222
+      },
+      "writtenOn": "2019-01-18T16:08:32Z",
+      "side": 1,
+      "message": "If there are no active namespaces, should we pass NULL for io_qpair, and free the io_qpair?",
+      "revId": "1816907e7847f9959e3c1c59857ed015e1deafff",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
     }
   ]
 }
