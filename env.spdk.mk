@@ -43,6 +43,10 @@ ifneq (, $(wildcard $(DPDK_LIB_DIR)/librte_kvargs.*))
 DPDK_LIB_LIST += -lrte_kvargs
 endif
 
+ifneq (, $(wildcard $(DPDK_LIB_DIR)/librte_power.*))
+DPDK_LIB_LIST += -lrte_power
+endif
+
 override CFLAGS += -I$(SPDK_ROOT_DIR)/include
 override LDFLAGS += \
 	-Wl,--whole-archive \
