@@ -154,6 +154,54 @@
     },
     {
       "key": {
+        "uuid": "ae4a481c_12baf701",
+        "filename": "spdk-nvme.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1011207
+      },
+      "writtenOn": "2019-03-26T14:59:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ef4bf928_221dfdd6",
+      "range": {
+        "startLine": 114,
+        "startChar": 15,
+        "endLine": 114,
+        "endChar": 20
+      },
+      "revId": "1816907e7847f9959e3c1c59857ed015e1deafff",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "92f3d24c_f94e6c5d",
+        "filename": "spdk-nvme.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1011207
+      },
+      "writtenOn": "2019-03-26T14:59:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9acdc85f_ecb8437e",
+      "range": {
+        "startLine": 114,
+        "startChar": 15,
+        "endLine": 114,
+        "endChar": 20
+      },
+      "revId": "1816907e7847f9959e3c1c59857ed015e1deafff",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "685b57fc_72fc26ad",
         "filename": "spdk-nvme.c",
         "patchSetId": 1
@@ -165,6 +213,24 @@
       "writtenOn": "2019-01-18T16:08:32Z",
       "side": 1,
       "message": "If there are no active namespaces, should we pass NULL for io_qpair, and free the io_qpair?",
+      "revId": "1816907e7847f9959e3c1c59857ed015e1deafff",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9e64facc_854585c8",
+        "filename": "spdk-nvme.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1011207
+      },
+      "writtenOn": "2019-03-26T14:59:59Z",
+      "side": 1,
+      "message": "This looks like no problem as it will be freed later where we only allocate one IO qpair.",
+      "parentUuid": "685b57fc_72fc26ad",
       "revId": "1816907e7847f9959e3c1c59857ed015e1deafff",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
