@@ -55,6 +55,12 @@ override LDFLAGS += \
 	-Wl,--no-whole-archive \
 	-ldl -pthread -lrt -lrdmacm -lnuma -libverbs
 
+ifeq ($(CONFIG_ISAL), y)
+ISAL_DIR=$(SPDK_ROOT_DIR)/isa-l
+override LDFLAGS += -L$(ISAL_DIR)/.libs -lisal
+override CFLAGS += -I$(ISAL_DIR)/..
+endif
+
 ifeq ($(CONFIG_ASAN),y)
 override CFLAGS += -fsanitize=address
 override LDFLAGS += -fsanitize=address
