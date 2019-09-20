@@ -1071,15 +1071,8 @@ static int delete_ns(int argc, char **argv, struct command *cmd, struct plugin *
 		goto ret;
 	}
 
-	if (S_ISBLK(nvme_stat.st_mode)) {
-		cfg.namespace_id = get_nsid(fd);
-		if (cfg.namespace_id == 0) {
-			err = -EINVAL;
-			goto close_fd;
-		}
-	} else if (!cfg.namespace_id) {
-		fprintf(stderr, "%s: namespace-id parameter required\n",
-						cmd->name);
+	cfg.namespace_id = get_nsid(fd);
+	if (cfg.namespace_id == 0) {
 		err = -EINVAL;
 		goto close_fd;
 	}
@@ -1709,7 +1702,7 @@ static int id_ns(int argc, char **argv, struct command *cmd, struct plugin *plug
 		flags |= VS;
 	if (cfg.human_readable)
 		flags |= HUMAN;
-	if (!cfg.namespace_id && S_ISBLK(nvme_stat.st_mode)) {
+	if (!cfg.namespace_id) {
 		cfg.namespace_id = get_nsid(fd);
 		if (cfg.namespace_id == 0) {
 			err = -EINVAL;
@@ -3000,7 +2993,7 @@ static int format(int argc, char **argv, struct command *cmd, struct plugin *plu
 		 * format of all namespaces.
 		 */
 		cfg.namespace_id = NVME_NSID_ALL;
-	} else if (S_ISBLK(nvme_stat.st_mode)) {
+	} else {
 		cfg.namespace_id = get_nsid(fd);
 		if (cfg.namespace_id == 0) {
 			err = -EINVAL;
@@ -3098,7 +3091,7 @@ static int format(int argc, char **argv, struct command *cmd, struct plugin *plu
 		show_nvme_status(err);
 	else {
 		printf("Success formatting namespace:%x\n", cfg.namespace_id);
-		if (S_ISBLK(nvme_stat.st_mode) && ioctl(fd, BLKRRPART) < 0) {
+		if (ioctl(fd, BLKRRPART) < 0) {
 			fprintf(stderr, "failed to re-read partition table\n");
 			err = -errno;
 			goto close_fd;
@@ -3772,12 +3765,10 @@ static int flush(int argc, char **argv, struct command *cmd, struct plugin *plug
 		goto ret;
 	}
 
-	if (S_ISBLK(nvme_stat.st_mode)) {
-		cfg.namespace_id = get_nsid(fd);
-		if (cfg.namespace_id == 0) {
-			err = -EINVAL;
-			goto close_fd;
-		}
+	cfg.namespace_id = get_nsid(fd);
+	if (cfg.namespace_id == 0) {
+		err = -EINVAL;
+		goto close_fd;
 	}
 
 	err = nvme_flush(fd, cfg.namespace_id);
