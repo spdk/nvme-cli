@@ -1,0 +1,9 @@
+Code-Review+2: Jim Harris <james.r.harris@intel.com>
+Code-Review+2: Shuhei Matsumoto <shuhei.matsumoto.xt@hitachi.com>
+Code-Review+2: Ben Walker <benjamin.walker@intel.com>
+Verified+1: Jim Harris <james.r.harris@intel.com>
+Submitted-by: Tomasz Zawadzki <tomasz.zawadzki@intel.com>
+Submitted-at: Wed, 30 Oct 2019 08:21:30 +0000
+Reviewed-on: https://review.gerrithub.io/c/spdk/nvme-cli/+/472250
+Project: spdk/nvme-cli
+Branch: refs/heads/nvme-cuse
