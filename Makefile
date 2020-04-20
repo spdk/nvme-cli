@@ -24,7 +24,8 @@ AUTHOR=Keith Busch <keith.busch@intel.com>
 
 default: $(NVME)
 
-include env.spdk.mk
+SPDK_ROOT_DIR ?= $(abspath $(CURDIR)/spdk)
+include $(SPDK_ROOT_DIR)/mk/spdk.nvmecli.mk
 
 NVME-VERSION-FILE: FORCE
 	@$(SHELL_PATH) ./NVME-VERSION-GEN
